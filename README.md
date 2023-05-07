@@ -8,13 +8,13 @@ __자료구조 / 운영체제 / 네트워크 / 디자인 패턴 + (추가적인 
 
 ## 목차
       
-> __[자료구조](https://github.com/jhmin-kk99/Coding-Interview/blob/main/DataStructure)__    
+> __[자료구조](https://github.com/jhmin-kk99/Coding-Interview/blob/main/DataStructure.md)__    
 >   
-> __[운영체제](https://github.com/jhmin-kk99/Algorithm-Study/blob/main/OS.md)__       
+> __[운영체제](https://github.com/jhmin-kk99/Coding-Interview/blob/main/OS.md)__       
 >
-> __[네트워크](https://github.com/jhmin-kk99/Algorithm-Study/blob/main/Network.md)__       
+> __[네트워크](https://github.com/jhmin-kk99/Coding-Interview/blob/main/Network.md)__       
 >
-> __[디자인패턴](https://github.com/jhmin-kk99/Algorithm-Study/blob/main/DesignPattern.md)__      
+> __[디자인패턴](https://github.com/jhmin-kk99/Coding-Interview/blob/main/DesignPattern.md)__      
 
 
 
