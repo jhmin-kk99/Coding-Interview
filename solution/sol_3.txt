@@ -43,7 +43,7 @@ String result = concatenate(); //에러. 인자가 필요함.
 
 매개변수의 타입을 배열로 하면, 반드시 인자를 지정해 줘야하기 때문에, 인자를 생략할 수 없다.
 null이나 길이가 0인 배열을 인자로 지정해줘야 하는 불편함이 있다.
-
+ 
 가변인자를 오버로딩할 때 주의할 점
 
 static String concatenate(String delim, String... args){...}
