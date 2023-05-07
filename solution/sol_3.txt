@@ -1,0 +1,53 @@
+가변인자란
+
+기존에는 메서드의 매개변수 개수가 고정적이었으나 JDK1.5부터 동적으로 지정해 줄 수 있게
+되었으며, 이 기능을 '가변인자(variable arguments)'라고 한다.
+가변인자는 '타입...변수명'과 같은 형식으로 선언하며, PrintStream클래스의 printf()가
+대표적인 예이다.
+
+public PrintStream printf(String format, Object... args){...}
+
+위와 같이 가변인자 외에도 매개변수가 더 있다면, 가변인자를 매개변수 중에서 제일 마지막에
+선언해야한다.
+
+여러 문자열을 하나로 결합하여 반환하는 concatenate메서드를 작성한다면, 아래와 같이
+매개변수의 개수를 다르게 해서 여러 개의 메서드를 작성해야할 것이다.
+
+String concatenate(String s1, String s2){...}
+String concatenate(String s1, String s2, String s3){...}
+String concatenate(String s1, String s2, String s3, String s4){...}
+
+이럴 때, 가변인자를 사용하면 메서드 하나로 간단히 대체할 수 있다.
+
+String concatenate(String ...str){...}
+
+이 메서드를 호출할 때, 아래와 같이 인자의 개수를 가변적으로 할 수 있다.
+인자가 아예 없어도 되고 배열도 인자가 될 수 있다.
+
+System.out.println(concatenate()); //인자가 없음
+System.out.println(concatenate("a")); //인자가 히나
+System.out.println(concatenate("a","b")); //인자가 둘
+System.out.println(concatenate(new String[]{"A", "B"})); //배열도 가능
+
+가변인자는 내부적으로 배열을 이용한다. 
+그래서 가변인자가 선언된 메서드를 호출할 때마다 배열이 새로 생성된다.
+꼭 필요한 경우에만 가변인자를 사용하자.
+
+매개변수의 타입을 배열로 하는 것과 어떤 차이가 있는가?
+
+String concatenate(String[] str){...}
+
+String result = concatenate(new String[0]); //인자를 배열로 지정
+String result = concatenate(null); //인자로 null을 지정
+String result = concatenate(); //에러. 인자가 필요함.
+
+매개변수의 타입을 배열로 하면, 반드시 인자를 지정해 줘야하기 때문에, 인자를 생략할 수 없다.
+null이나 길이가 0인 배열을 인자로 지정해줘야 하는 불편함이 있다.
+
+가변인자를 오버로딩할 때 주의할 점
+
+static String concatenate(String delim, String... args){...}
+static String concatenate(String... args){...}
+
+두 오버로딩된 메서드가 구분되지 않아 에러가 발생한다.
+가능하면 가변인자를 사용한 메서드는 오버로딩하지 않는 것이 좋다.
