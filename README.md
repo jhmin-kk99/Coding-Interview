@@ -18,7 +18,7 @@ __자료구조 / 운영체제 / 네트워크 / 디자인 패턴 / 데이터베�
 > 
 > __[데이터베이스](https://github.com/jhmin-kk99/Coding-Interview/blob/main/DataBase.md)__        
 >   
-> __[백앤드](https://github.com/jhmin-kk99/Coding-Interview/blob/main/BackEnd.md)__   
+> __[자바](https://github.com/jhmin-kk99/Coding-Interview/blob/main/BackEnd.md)__   
 
 
 
