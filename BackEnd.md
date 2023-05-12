@@ -10,4 +10,4 @@
 |__단일 상속만을 허용하는 이유, 단일상속의 문제점을 해결하는 방법?__  |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_4.txt)__  |_자바의 정석_|
 |__패키지란?__  |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_5.txt)__  |_자바의 정석_|
 |__접근 제어자를 사용하는 이유?__  |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_6.txt)__  |_자바의 정석_|
-|__다형성의 장점?__  |__[solution]()__  |_자바의 정석_|
+|__다형성의 장점?__  |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_7.txt)__  |_자바의 정석_|
