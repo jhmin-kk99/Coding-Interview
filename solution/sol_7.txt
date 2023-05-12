@@ -1,0 +1,133 @@
+다형성의 장점
+
+1. 다형적 매개변수
+2. 하나의 배열로 여러 종류 객체 다루기
+
+1.
+아래와 같이 Product, Tv, Computer, Audio, Buyer클래스가 정의되어 있다고 하자.
+
+class Product{
+	int price;
+	int bonusPoint;
+}
+class Tv extends Product{}
+class Computer extends Product{}
+class Audio extends Product{}
+
+class Buyer{
+	int money = 1000;
+	int bonusPoint = 0;
+}
+
+Buyer클래스에 물건을 구입하는 기능의 메서드를 추가하려고 할 때,
+구입할 대상이 필요하므로 매개벼누로 구입할 제품을 넘겨받아야 한다.
+
+Tv를 구입하려면 Buyer클래스 안에 
+
+void buy(Tv t){
+	money -= t.price;
+	bonusPoint += t.bonusPoint;
+}
+
+Computer를 구입하려면 같은 방법으로 추가하는 작업을 해주어야 한다.
+
+void buy(Computer c){
+	money -= c.price;
+	bonusPoint += c.bonusPoint;
+}
+
+이렇게 되면, 제품의 종류가 늘어날 때마다 Buyer클래스에는 새로운 buy메서드를 추가해 주어야 할 것이다.
+그러나 메서드의 매개변수에 다형성을 적용하면 아래와 같이 하나의 메서드로 간단히 처리할 수 있다.
+
+void buy(Product p){
+	money -= p.price;
+	bonusPoint += p.bonusPoint;
+}
+
+매개변수가 Product타입의 참조변수라는 것은, 메서드의 매개변수로 Product클래스의 자손타입의 참조변수면
+어느 것이나 매개변수로 받아들일 수 있다는 뜻이다.
+
+앞으로 다른 제품 클래스를 추가할 때 Product클래스를 상속받기만 하면, buy(Product p)메서드의 매개변수로 받아들여질 수 있다.
+
+또 다른 예로, PrintStream클래스에 정의되어있는 print(Object obj)메서드를 살펴보자.
+print(Object obj)는 매개변수로 Object타입의 변수가 선언되어있는데 Object는 모든 클래스의 조상이므로 이 메서드의 매개변수로 어떤
+타입의 인스턴스도 가능하므로, 이 하나의 메서드로 모든 타입의 인스턴스를 처리할 수 있는 것이다.
+이 메서드는 매개변수에 toString()을 호출하여 문자열을 얻어서 출력한다. 실제 코드는 아래와 같다.
+
+public void print(Object obj){
+	write(String.valueOf(obj));
+}
+
+public static String valueOf(Object obj){
+	return (obj == null) ? "null" : obj.toString();
+}
+
+2.
+
+조상타입의 참조변수로 자손타입의 객체를 참조하는 것이 가능하므로, Product클래스가 Tv, Computer, Audio클래스의 조상일 때,
+다음과 같이 할 수 있다.
+
+Product p1 = new Tv();
+Product p2 = new Computer();
+Product p3 = new Audio();
+
+위의 코드를 Product타입의 참조변수 배열로 처리하면 다음과 같다.
+
+Product p[] = new Product[3];
+p[0] = new Tv();
+p[1] = new Computer();
+p[2] = new Audio();
+
+이처럼 조상타입의 참조변수 배열을 사용하면, 공통의 조상을 가진 서로 다른 종류의 객체를 배열로 묶어서 다룰 수 있다.
+또는 묶어서 다루고싶은 객체들의 상속관계를 따져서 가장 가까운 공통조상 클래스 타입의 참조변수 배열을 생성해서 객체들을 저장하면 된다.
+
+class Buyer{
+	int money = 1000;
+	int bonusPoint = 0;
+	Product[] item = new Product[10];
+	int i = 0;
+
+	void buy(Product p){
+		if(money < p.price){
+			System.out.println("잔액 부족");
+			return;
+		}
+
+		money -= p.price;
+		bonusPoint += p.bonusPoint;
+		item[i++] = p;
+		System.out.println(p + " 구입");
+	}
+}
+
+Product배열은 배열의 크기가 정해져있어 그 이상의 제품을 구입할 수 없다.
+이런경우 Vector클래스를 사용하면 된다.
+Vector클래스의 경우 내부적으로 Object타입의 배열을 가지고 있어서, 이 배열에 객체를 추가하거나 제거할 수 있게 작성되어 있다.
+
+public class Vector extends AbstractList
+							implements List, Cloneable, java.io.Serializable{
+	protected Object elementData[];
+		...
+	
+}
+
+Vector() : 10개의 객체를 저장할 수 있는 Vector인스턴스를 생성한다. 10개 이상의 인스턴스가 저장되면, 자동적으로 크기가 증가된다.
+boolean add(Object o) : Vector에 객체를 추가한다. 추가에 성공하면 결과값으로 true, 실패하면 false를 반환한다.
+boolean remove(Object o) : Vector에 저장되어 있는 객체를 제거한다. 제거에 성공하면 true, 실패하면 false를 반환한다.
+boolean isEmpty() : Vector가 비어있는지 검사한다. 비어있으면 true, 비어있지 않으면 false를 반환한다.
+Object get(int index) : 지정된 위치(index)의 객체를 반환한다. 반환타입이 Object타입이므로 적절한 타입으로의 형변환이 필요하다.
+int size() : Vector에 저장된 객체의 개수를 반환한다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
