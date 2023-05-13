@@ -210,5 +210,53 @@ JDK의 설계자들은 디폴트 메서드(default method)라는 것을 고안�
 - 디폴트 메서드와 조상 클래스의 메서드 간의 충돌의 경우
 조상 클래스의 메서드가 상속되고, 디폴트 메서드는 무시된다.
 
+class DefaltMethodTest{
+  public static void main(String args[]){
+    Child c = new Child();
+    c.method1();// 여러 인터페이스의 디폴트 메서드 간의 충돌
+    c.method2();// 디폴트 메서드와 조상 클래스의 메서드 간의 충돌
+    MyInterface.staticMethod();
+    MyInterface2.staticMethod();
+  }
+}
+
+class Child extends Parent implements MyInterface, MyInterface2{
+  public void method(){
+    System.out.println("method1() in Child"); //오버라이딩
+  }
+}
+
+class Parent{
+    public void method2(){
+    System.out.println("method2() in Parent"); //오버라이딩
+  }
+}
+
+interface MyInterface{
+  default void method1(){
+    System.out.println("method1() in MyInterface");
+  }
+  default void method2(){
+    system.out.println("method2() in MyInterface");
+  }
+  static void staticMethod(){
+    System.out.println("staticMethod() in MyInterface");
+  }
+}
+
+interface MyInterface2{
+  default void method1(){
+     System.out.println("method1() in MyInterface2");
+  }
+    static void staticMethod(){
+    System.out.println("staticMethod() in MyInterface2");
+  }
+}
+
+
+
+
+
+
 
 
