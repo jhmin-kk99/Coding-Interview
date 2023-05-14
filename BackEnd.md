@@ -13,3 +13,4 @@
 |__다형성의 장점은?__  |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_7.txt)__  |_자바의 정석_|
 |__인터페이스와 추상클래스의 차이, 각각의 특징은?__  |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_8.txt)__|_자바의 정석_|
 |__인터페이스를 사용하는 이유와 그 장점은?__  |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_9.txt)__|_자바의 정석_|
+|__예외처리를 언제 하는지, 왜 하는지?__  |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_10.txt)__|_자바의 정석_|
