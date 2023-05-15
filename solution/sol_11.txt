@@ -1,7 +1,11 @@
-java.lang 패키지에서 자주 쓰이는 클래스들
+java.lang 패키지와 자주 쓰이는 클래스들
 
+java.lang 패키지
 1. Object 클래스
 2. String 클래스
+3. StringBuffer, StringBuilder 
+
+자주쓰이는 
 
 
 1.
@@ -125,7 +129,6 @@ String s = "";
 String s = "";
 char c = ' ';
 
-String클래스의 생성자와 메서드 //자주 쓰이므로 필요할 때 찾아서 사용한다.
 
 
 
