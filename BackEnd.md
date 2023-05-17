@@ -29,6 +29,7 @@
 |__CheckedException과 UnCheckedException의 차이는?__ |||
 |__내부클래스의 장점은?__ |||
 |__java.lang패키지에서 자주 사용되는 클래스들은?__  |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_11.txt)__|_자바의 정석_|
+|__new String()과 리터럴("")의 차이는?__ |||
 |__String 객체가 불변인 이유는?__ |||
 |__Synchronized란?__ |||
 |__리플랙션이란? 언제 쓰이는지?__ |||
