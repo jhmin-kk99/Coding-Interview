@@ -1,4 +1,4 @@
-# DataStructure & Algorithm   
+# DataStructure
 
 - ### 배열
 | 질문 | 정답 | 참고|
