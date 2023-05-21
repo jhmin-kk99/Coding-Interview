@@ -32,7 +32,7 @@
 |__java.lang패키지에서 자주 사용되는 클래스들은?__  |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_11.txt)__|_자바의 정석_|
 |__new String()과 리터럴("")의 차이는?__ |||
 |__String 객체가 불변인 이유는?__ |||
-|__형식화 클래스란?__ |__[solution]()__|_자바의 정석_|
+|__형식화 클래스란?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_12.txt)__|_자바의 정석_|
 |__Synchronized란?__ |||
 |__리플랙션이란? 언제 쓰이는지?__ |||
 |__Optional API란?__ |||
