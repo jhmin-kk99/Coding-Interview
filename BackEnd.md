@@ -37,7 +37,7 @@
 |__Synchronized란?__ |||
 |__리플랙션이란? 언제 쓰이는지?__ |||
 |__Optional API란?__ |||
-|__컬렉션프레임워크란?__ |||
+|__컬렉션프레임워크란?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_14.txt)__|_자바의 정석_|
 |__Set과 Map의 타입이 Wrapper Class가 아닌 Object를 받을 때 중복 검사는 어떻게 할건지?__ |||
 |__Vector와 List의 차이는?__ |||
 |__제네릭이란? 왜 쓰는지?__ |||
