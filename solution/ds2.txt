@@ -2,18 +2,13 @@ Binary Search Tree와 Binary Tree
 
 이진 트리(Binary Tree)는 모든 노드의 차수가 2 이하인 트리를 말한다. 노드의 차수란 한 노드가 가지는
 자식 노드의 개수를 의미한다. 
-이진 트리는 트리의 형태에 따라 Full Binary Tree, Complete Binary Tree, Skewed Binary Tree로 나눌 수
-있다.
+이진 트리는 트리의 형태에 따라 Full Binary Tree, Complete Binary Tree, Skewed Binary Tree로 나눌 수 있다.
 
 Full Binary Tree란 모든 레벨의 노드가 꽉 차있는 이진 트리를 말한다.
-Complete Binary Tree란 높이가 h이고 노드 개수가 n개라고 했을 때, 레벨 1부터 h-1까지는 꽉 채워져 있고,
-마지막 레벨 h에서는 왼쪽에서 오른쪽으로 노드가 채워져 있는 이진 트리를 말한다.
-Skewed Binary Tree란 같은 높이의 이진 트리 중에서 최소 개수의 노드 개수를 가지면서 왼쪽 혹은 오른쪽
-서브트리만을 가지는 이진 트리를 말한다. 
+Complete Binary Tree란 높이가 h이고 노드 개수가 n개라고 했을 때, 레벨 1부터 h-1까지는 꽉 채워져 있고, 마지막 레벨 h에서는 왼쪽에서 오른쪽으로 노드가 채워져 있는 이진 트리를 말한다.
+Skewed Binary Tree란 같은 높이의 이진 트리 중에서 최소 개수의 노드 개수를 가지면서 왼쪽 혹은 오른쪽 서브트리만을 가지는 이진 트리를 말한다. 
 
-이진 탐색 트리(Binary Search Tree)는 탐색(Search)이 들어간 이진 트리라는 점에서 '자료의 검색'이 주된
-기능이 된다. 즉 이진 탐색 트리는 효율적인 자료 검색을 목적으로 기존 이진 트리에 몇 가지 제약 사항을
-추가한 트리를 말한다. 이진 탐색 트리는 특정 키 값에 해당하는 노드를 신속하게 찾는 것이 기본적인 기능이다.
+이진 탐색 트리(Binary Search Tree)는 탐색(Search)이 들어간 이진 트리라는 점에서 '자료의 검색'이 주된 기능이 된다. 즉 이진 탐색 트리는 효율적인 자료 검색을 목적으로 기존 이진 트리에 몇 가지 제약 사항을 추가한 트리를 말한다. 이진 탐색 트리는 특정 키 값에 해당하는 노드를 신속하게 찾는 것이 기본적인 기능이다.
 
 Binary Search Tree의 Definition은 다음과 같다.
 
@@ -24,4 +19,334 @@ Binary Search Tree의 Definition은 다음과 같다.
 5. Each Subtree is itself a BST (we call them Left and Right subtree(s))
 6. The Key values in Left Subtree are all smaller than the Key in Root Node
 (And Vice Versa, Holds recursively in each Subtree(of course))
+
+# Search Algorithm
+
+Call Search(Root, X)
+Search(Node, X)
+Recursive Implementation
+- if no current Node then return Fail (return null)
+- compare K (key at current Node) with X (value to Search)
+- if equal then return current Node (pointer to the Node) [Case 1]
+- if K < X then return Search(Right Child, X) [Case 2]
+- if K > X then return Search(Left child, X) [Case 3]
+
+// dummy node가 있음(무한대 , 없어지지 않음)
+Node *Search(Node *N, int x)
+{
+  	if(N==NULL) return NULL;
+    else if(N->k == x)
+    {
+    	return N;
+    }
+    else if ( N->k < x) 
+    {
+    	return Search(N->R,x);
+    }
+    else 
+    {
+    	return Search(N->L, x);
+    }
+}
+
+# Search Correctness
+
+To Prove : "If X equals key in a Node in the Tree whose root is R, Search(R,X) returns
+the pointer to the node, otherwise it will return Fail"
+Proof by cases:
+- case 0 : Trivial
+- case 1 : Trivial
+- case 2 : "K<X" means that X is not in the Left SubTree, so if X is in the Tree then
+X is in the Right Subtree. Search(Right Child, X) will return the pointer to the node
+if X is in the Right Subtree
+- case 3 : Ditto
+
+# Search Performance
+
+Given a fixed Tree
+- Worst Case : O(Height)
+Considering All Possible Trees
+- Worst Case : O(n)
+
+# Insert Algorithm
+
+First Search(Root,X)
+if Search() succeeds, then Insert() fails.
+if Search() fails, then make a new Node at the last direction the Search() tried to go
+
+Node *Insert(Node *N, int x, Node **RP)
+{
+  Node *NN;
+  if(N == NULL){
+    NN = new Node;
+    NN->k = x; NN->L = NN->R = NULL;
+    *RP = NN;
+    return NN;
+  }
+  else {
+    if(N->k < x) return Insert(N->R, x, &(N->R));
+    else if (N->k > x) return Insert(N->L, x, &(N->L));
+    else return NULL;
+  }
+}
+
+# Insert Correctness
+
+Comes almost directly from the Correctness of Search
+When the algorithm goes down to a SubTree
+- it satisfies the condition that "if X is in the Tree, X is in that SubTree"
+
+# Delete Algorithm
+
+Do Search() first
+if Search() fails, Delete() also fails
+if Search() succeeds
+- case 1 : Node has no Child
+- case 2 : Node has one Child
+- case 3 : Node has two Children
+
+# Case 1 Correctness
+Correctness trivial 
+
+int Delete(Node *N, Node *P){
+  if(N->L == NULL && N->R == NULL){
+    if(P->L == N) P->L = NULL;
+    else P->R = NULL;
+    delete N;
+  }
+}
+
+# Case 2 Correctness
+
+a가 c의 left child, b가 a의 left child이고 a를 지운다고 가정
+Everything under b is not changed
+- so BST condition satisfied by all the Nodes in Subtree where the root Node is b
+Every Key under b was already in the Left Subtree of c
+- so BST condition satisfied by all the Nodes in area(a와 그 아래 서브트리들을 제외한 나머지 영역)
+
+int Delete (Node *N, Node *P){
+  ...
+  else if(N->L == NULL || N->R == NULL){
+    if(P->L == N){
+      if(N->L != NULL) P->L = N->L;
+      else P->L = N->R;
+    }
+    else{ // P->R == N
+      if(N->L != NULL) P->R = N->L;
+      else P->R = N->R;
+    }
+  } 
+}
+
+# Case 3 Correctness
+
+a가 c의 left child, d가 a의 right child, x가 d의 가장 마지막 left child (더이상 left child 없음)
+라고 가정
+if we sort all keys
+- .....a,x,.....
+- That is x is right after a
+- if we put x at the Node for a, then BST conditions are satisfied by all the nodes, except the
+original x(that's ok)
+- Because no value between a and x is in the Tree
+
+why is this true? -> .....a,x,.....
+Continuity Lemma
+- All key values in a Subtree appears continuously in the Sorted List
+- Proof by top-to-bottom induction
+
+Q. BST에 속한 모든 값들을 정렬한 결과를 L이라 하자.
+이 트리의 한 노드에서 시작하는 Subtree에 존재하는 값들은 L에 연속으로 등장한다는 것을 증명하라.
+
+A. Root 기준으로 Root의 subtree는 tree 전체이므로 전부 연속으로 나온다.
+Root보다 작은 값들은 모두 왼쪽에 있고, 큰 값들은 모두 오른쪽에 있다. 
+즉,  Root의 왼쪽 서브트리, Root의 오른쪽 서브트리는 섞일 수 없음
+따라서 Root의 왼쪽 서브트리 아래에 있는 것들은 전부 연속, Root의 오른쪽 자식
+서브트리 아래에 있는 것들은 전부 연속함을 알 수 있다. 같은 방법으로 top-to-bottom 으로 증명이 된다. 따라서 이 트리의 한 노드에서 시작하는 Subtree에 존재하는 값들은 L에 연속으로 등장한다.
+
+
+#include<iostream>
+#include<cstdio>
+
+using namespace std;
+
+class Node {
+public:
+    int a;
+    Node* L, * R;
+};
+
+class BST{
+public:
+    BST();
+    Node* Search(int x);
+    Node* SearchP(Node* N, int x);
+    void Insert(int x);
+    void InsertP(Node *N, int x, Node **RP);
+    void Delete(int x);
+    void Print();
+    void PrintP(Node* N, int d, int LR);
+    Node *Root;
+    Node* Prt;
+};
+BST::BST()
+{
+    Prt = new Node;
+    Prt->a = NULL;
+    Prt->R = NULL;
+    Prt->L = NULL;
+    Root = new Node;
+    Root->a = 999; //dummy node
+    Root->L = NULL;
+    Root->R = NULL;
+}
+
+Node* BST::Search(int x)
+{
+    Prt = Root; //999
+    return SearchP(Root->L, x);
+}
+Node* BST::SearchP(Node* N, int x)
+{
+    if (N == NULL)return NULL;
+    else {
+        if (N->a < x) { Prt = N; SearchP(N->R, x); }
+        else if (N->a > x) { Prt = N; SearchP(N->L, x); }
+        else {
+            cout <<x<<' '<< "Found !!"<<'\n';
+            return N;
+        }
+    }
+}
+void BST::Insert(int x)
+{
+    InsertP(Root->L, x, &(Root->L));
+}
+void BST::InsertP(Node* N, int x, Node** RP)
+{
+    Node* NN;
+    if (N == NULL) {
+        NN = new Node;
+        NN->a = x;
+        NN->L = NN->R = NULL;
+        *RP = NN;
+    }
+    else {
+        if (N->a < x) InsertP(N->R, x, &(N->R));
+        else if (N->a > x) InsertP(N->L, x, &(N->L));
+        else return;
+    }
+}
+void BST::Delete(int x)
+{
+    Node* NN, * PP, * MD, *MDP;
+    NN = Search(x); PP = Prt;
+    if (NN == NULL) return;
+    if (NN->L == NULL && NN->R == NULL) {
+        if (PP->L == NN) PP->L = NULL;
+        else PP->R = NULL;
+        delete NN;
+    }
+    else if (NN->L != NULL && NN->R == NULL)
+    {
+        if (PP->L == NN) PP->L = NN->L;
+        else PP->R = NN->L;
+        delete NN;
+    }
+    else if (NN->L == NULL && NN->R != NULL)
+    {
+        if (PP->L == NN) PP->L = NN->R;
+        else PP->R = NN->R;
+        delete NN;
+    }
+    else {
+        MD = NN->R;
+        MDP = NN;
+        while (MD->L != NULL)
+        {
+            MDP = MD;
+            MD = MD->L;
+        }
+        NN->a = MD->a;
+        if (MD->L == NULL && MD->R == NULL) {
+            if (MDP->L == MD) MDP->L = NULL;
+            else MDP->R = NULL; 
+            delete MD;
+        }
+        else if (MD->L == NULL && MD->R != NULL)
+        {
+            if (MDP->L == MD) MDP->L = MD->R;
+            else MDP->R = MD->R; 
+            delete MD;
+        }
+        else {}
+    }
+}
+void BST::Print()
+{
+    PrintP(Root, 0, 0);
+}
+void BST::PrintP(Node* N, int d, int LR)
+{
+    int i;
+    if (LR == 1)
+    {
+        for (i = 0; i < d; i++)
+        {
+            cout << "        ";
+        }
+    }
+    if (N != NULL) {
+        printf("%8d", N->a);
+    }
+    
+    if (N->L == NULL) cout << '\n';
+    else PrintP(N->L, d + 1, 0);
+    if (N->R == NULL);
+    else PrintP(N->R, d + 1, 1);
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+   
+    char c;
+    int x, i;
+    BST T;
+    Node* RR;
+    while (true) {
+        T.Print();
+        cin >> c;
+        if (c == 's') {
+            cin >> x;
+            if ((RR = T.Search(x)) == NULL)
+                cout <<x<<' '<<"Not Found."<<'\n';
+            else
+                cout <<x<< "Found at Address " << x << " " <<RR<< '\n';  
+        }
+        else if(c=='i')
+        {
+            cin >> x;
+            T.Insert(x);
+        }
+        else if (c == 'd')
+        {
+            cin >> x;
+            T.Delete(x);
+        }
+        else if (c == 'q') {
+            break;
+        }
+        else {
+           cout << "? ? ?"<< '\n';
+        }
+    }
+    return 0;
+}
+
+
+
+
+
+
 
