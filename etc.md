@@ -7,12 +7,7 @@
 |__CPU Time은?__|||
 |__(MIPS) 어셈블리 명령어의 포맷은? branch, jump의 경우 주소 변환은?__|||
 |__ALU, Register, CU, Datapath는?__|||
-|__Pipeline이란? 어떤 면에서 성능이 향상? Pipeline Register의 역할은?__|||
-|__5-stage pipeline의 각 stage는?__|||
-|__Pipeline Hazard의 종류는?__|||
-|__Structural Hazard, Data Hazard 해결법은?__|||
-|__Double Data Hazard, Load-use Data Hazard의 경우 해결법은?__|||
-|__Control Hazard 해결법은?__|||
+|__Pipeline이란?__|||
 |__Interrupt, Exception, Trap의 차이는?__|||
 |__(MIPS) Exception이 발생하는 경우 어떻게 처리?__|||
 |__Vectored vs Non-vectored Interrupt의 차이는?__|||
