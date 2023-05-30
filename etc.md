@@ -7,7 +7,7 @@
 |__CPU Time은?__|||
 |__(MIPS) 어셈블리 명령어의 포맷은? branch, jump의 경우 주소 변환은?__|||
 |__ALU, Register, CU, Datapath는?__|||
-|__Pipeline이란?__|[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/etc1.txt)|컴퓨터 구조 및 설계, 컴퓨터 구조론|
+|__Pipeline이란?__|[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/etc1.txt)|_컴퓨터 구조 및 설계, 컴퓨터 구조론_|
 |__Interrupt, Exception, Trap의 차이는?__|||
 |__(MIPS) Exception이 발생하는 경우 어떻게 처리?__|||
 |__Vectored vs Non-vectored Interrupt의 차이는?__|||
