@@ -1,0 +1,84 @@
+Pipeline이란?
+
+단일사이클은 설계가 올바르게 작동한다 하더라도 비효율성 때문에 현대적 설계에서는 쓰이지 않는다.
+단일사이클 설계에서는 클럭 사이클이 모든 명령어에 대해 같은 길이를 가져야 하기 때문이다. 클럭 사이클은
+컴퓨터에서 가능한 경로 중 가장 긴 경로에 의해 결정된다. 이 최장 경로는 lw명령어라는 것이 거의 확실
+한데, 이 적재 명령어는 명령어 메모리, 레지스터 파일, ALU, 데이터 메모리, 레지스터 파일의 다섯 개 기능
+유닛을 차례로 사용한다. CPI값은 1이지만, 단일 사이클 구현은 클럭 사이클이 너무 길기 때문에 전체 성능
+은 좋지 않다. 
+
+파이프라이닝(pipelining)은 여러 명령어가 중첩되어 실행되는 구현 기술이다. 
+
+파이프라이닝은 다음의 특성을 지닌다.
+- piplelining doesn't help latency of single task, it helps throughput of entire workload
+- pipeline rate limited by slowest pipeline stage
+- multiple tasks operating simultaneously using different resources
+- potential speedup = number pipe stages
+- unbalanced lengths of pipe stages reduces speedup
+- time to 'fill' pipeline and time to 'drain' it reduces speedup
+- stall for dependences
+
+MIPS pipeline은 명령어 처리에 5단계를 거친다
+1. IF : Instruction fetch from memory(Ifetch)
+2. ID : Instruction decode & register read(ID/Reg)
+3. EX : Execute operation or calculate address(Exec)
+4. MEM : Access memory operand(Mem)
+5. WB : Write result back to register(Wr)
+
+why pipeline?
+
+suppose
+- 100 instructions are executed
+- the single cycle machine has a cycle time of 45ns
+- the multicycle and pipeline machines have cycle times of 10ns
+- the multicycle machine has a CPI of 3.6
+
+# single cycle machine
+45 ns/cycle * 1 CPI * 100 inst = 4500 ns
+# multicycle machine
+10 ns/cycle * 3.6 CPI * 100 inst = 3600 ns
+# ideal pipelined machine
+10 ns/cycle * (1 CPI * 100 inst + 4 cycle drain) = 1040 ns
+# ideal pipelined vs single cycle speedup
+4500 ns / 1040 ns = 4.33
+
+
+명령어의 5단계 각각을 수행하는 동안, 각 명령어의 값, 레지스터의 값 등을 유지하기 위해서 해당 단계에서 
+사용중인 값을 레지스터에 저장해야 한다. 이를 'Pipeline Register'라고 한다.
+
+다음 명령어가 다음 클럭 사이클에 실행될 수 없는 상황이 있다. 이러한 사건을 해저드(hazard)라 부르는데 세 종류가 있다.
+
+structural hazards(구조적 해저드) : attempt to use the same resource two different ways at the same time
+- Eg. two instructions try to read the same memory at the same time
+구조적 해저드는 클럭 사이클에 실행하기를 원하는 여러 명령어들의 수행을 하드웨어가 지원할 수 없기 때문에 발생한다. 
+각 파이프라인의 단계는 자신이 맡은 동작을 실행하기 위해서 메모리나 레지스터 등의 구성 요소를 사용하게 되는데, 
+같은 파이프라인 단계에 있는 명렁어들이 동시에 하나의 자원을 같이 사용하려고 하면 파이프라인이 지연될 수 있다. 
+파이프라인을 설계할 때 구조적 해저드를 피하도록 유의해야한다.
+
+data hazards(데이터 해저드) : attempt to use item before it is ready
+- instruction depends on result of prior instruction still in the pipeline
+add r1, r2, r3
+sub r4, r2, r1
+
+
+control hazards(컨트롤 해저드) : attempt to make a decision before condition is evaluated
+- branch instructions
+beq r1, r4, loop
+add r1, r2, r3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
