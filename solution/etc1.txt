@@ -113,8 +113,22 @@ when the flow of instruction addresses is not sequential; incurred by change of 
 possible solutions
 solution1 : stall
 - wait until decision is clear
+j incur 1 stall
+jumps not decoded until ID, so one flush is needed (pc+4)
 solution2 : reducing branch delay 
-- move decision point earlier in the pipeline
+move decision point earlier in the pipeline
+1. move the branch decision hardware back to the EX stage
+- reduces the number of stall (flush) cycles to two
+- adds an and gate and a 2x1 mux to the EX timing path
+2. add hardware to compute the branch target address and evaluate the branch decision to the ID stage
+- reduces the number of stall (flush) cycles to one (like with jumps)
+(but now need to add forwarding hardware in ID stage)
+- computing branch target address can be done in parellel with RegFile read
+(done for all instructions - only used when needed)
+- comparing the registers can't be done until after RegFile read, so comparing and updating the PC adds
+a mux, a comparator, and an and gate to the ID timing path
+3. For deeper pipelines, branch decision points can be even later in the pipeline, incurring more stalls
+
 solution3 : predict
 solution4 : delay decision (requires compiler support)
 control hazards occur less frequently than data hazards
