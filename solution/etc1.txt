@@ -111,10 +111,12 @@ when the flow of instruction addresses is not sequential; incurred by change of 
 - fetching next instruction depends on branch outcome
 - pipeline can't always fetch correct instruction
 possible solutions
-- stall
-- reducing branch delay -> move decision point earlier in the pipeline
-- predict
-- delay decision (requires compiler support)
+solution1 : stall
+- wait until decision is clear
+solution2 : reducing branch delay 
+- move decision point earlier in the pipeline
+solution3 : predict
+solution4 : delay decision (requires compiler support)
 control hazards occur less frequently than data hazards
 - there is nothing as effective against control hazards as forwarding is for data hazards
 
