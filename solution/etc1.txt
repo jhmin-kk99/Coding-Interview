@@ -99,13 +99,29 @@ can't always avoid stalls by forwarding
 - can't forward backward in time!
 must delay/stall instruction dependent on loads
 
-
-
-
 control hazards(제어 해저드) : attempt to make a decision before condition is evaluated
 - branch instructions
 beq r1, r4, loop
 add r1, r2, r3
+
+branch determines flow of control
+- conditional branches (beq, bne)
+- unconditional branches (j)
+when the flow of instruction addresses is not sequential; incurred by change of instructions(Branch)
+- fetching next instruction depends on branch outcome
+- pipeline can't always fetch correct instruction
+possible solutions
+- stall
+- reducing branch delay -> move decision point earlier in the pipeline
+- predict
+- delay decision (requires compiler support)
+control hazards occur less frequently than data hazards
+- there is nothing as effective against control hazards as forwarding is for data hazards
+
+
+
+
+
 
 
 
