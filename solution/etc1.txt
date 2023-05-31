@@ -55,13 +55,54 @@ structural hazards(구조적 해저드) : attempt to use the same resource two d
 같은 파이프라인 단계에 있는 명렁어들이 동시에 하나의 자원을 같이 사용하려고 하면 파이프라인이 지연될 수 있다. 
 파이프라인을 설계할 때 구조적 해저드를 피하도록 유의해야한다.
 
+solution 1 : Instruction fetch would have to stall for that
+- would cause a pipeline 'bubble'
+solution 2 : pipelined datapaths require separate instruction/data memories
+- or separate instruction/data caches
+solution 3 : allow memory to read and write more than one word per cycle 
+- 2 read, 1 write port가 있는 register file 처럼
+
 data hazards(데이터 해저드) : attempt to use item before it is ready
 - instruction depends on result of prior instruction still in the pipeline
 add r1, r2, r3
 sub r4, r2, r1
 
+solution 1 : insert the stalls(nops)
+- this really slows us down
+solution 2 : Internal bypassing, Data forwarding
+Internal bypassing
+- fix register file access hazard by doing reads in the second half of the cycle and writes in the first half
+register file의 Read Address1 혹은 Read Address2와 Write Address가 같으면, Write Data를 Read Data1 혹은 Read Data2에 보내준다.
+Data forwarding
+- Use temporary results, don't wait for them to be written 
 
-control hazards(컨트롤 해저드) : attempt to make a decision before condition is evaluated
+1. 
+add r1,r2,r3
+sub r1,r1,r5
+and r6,r7,r1
+or r8,r1,r1
+sw r4,100(r1)
+data fowarding으로 해결 가능
+- can fix data hazard by forwarding results as soon as they are available to where they are needed)
+2.
+add $1,$1,$2
+add $1,$1,$3
+add $1,$1,$4
+another potential data hazard can occur
+- when there is a conflict between the result of the WB stage instruction and the MEM stage instruction
+- which should be forwarded? More recent result!
+3.
+lw $2,20($1)
+and $4,$2,$5
+can't always avoid stalls by forwarding
+- if value not computed when needed
+- can't forward backward in time!
+must delay/stall instruction dependent on loads
+
+
+
+
+control hazards(제어 해저드) : attempt to make a decision before condition is evaluated
 - branch instructions
 beq r1, r4, loop
 add r1, r2, r3
