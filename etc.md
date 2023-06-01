@@ -2,13 +2,7 @@
 >
 | 질문 | 정답 | 참고|
 | :--:| :--: | :--: | 
-| __ISA (Instruction Set Architecture) 와 Implementation(Microarchitecture)은?__| | |
-|__무어의 법칙은?__|||
-|__CPU Time은?__|||
-|__(MIPS) 어셈블리 명령어의 포맷은? branch, jump의 경우 주소 변환은?__|||
-|__ALU, Register, CU, Datapath는?__|||
 |__Pipeline이란?__|[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/etc1.txt)|_컴퓨터 구조 및 설계, 컴퓨터 구조론_|
-|__Vectored vs Non-vectored Interrupt의 차이는?__|||
 |__Instruction level에서 병렬화 성능을 향상하기 위한 기법: VLIW, Superscalar는?__|||
 |__Locality는?__|||
 |__Virtual Memory는 왜 사용?__|||
