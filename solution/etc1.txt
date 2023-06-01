@@ -111,8 +111,6 @@ when the flow of instruction addresses is not sequential; incurred by change of 
 - fetching next instruction depends on branch outcome
 - pipeline can't always fetch correct instruction
 
-possible solutions
-
 solution1 : stall
 - wait until decision is clear
 j incur 1 stall
@@ -162,8 +160,6 @@ Assume future behavior wil continue the trend
 solution4 : delay decision (requires compiler support)
 control hazards occur less frequently than data hazards
 - there is nothing as effective against control hazards as forwarding is for data hazards
-
-////////////////////////////////////////////////////////// exception 전까지 .... 강의 다시 듣고 내용 보충하기 
 
 Unexpected Events in Pipeline
 
