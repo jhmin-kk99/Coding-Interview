@@ -3,7 +3,7 @@
 | 질문 | 정답 | 참고|
 | :--:| :--: | :--: | 
 |__Pipeline이란?__|[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/etc1.txt)|_컴퓨터 구조 및 설계, 컴퓨터 구조론_|
-|__Instruction level에서 병렬화 성능을 향상하기 위한 기법: VLIW, Superscalar는?__|||
+|__Instruction-Level Parallelism(ILP) : VLIW, Superscalar는?__|[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/etc2.txt)|_컴퓨터 구조 및 설계, 컴퓨터 구조론_|
 |__Locality는?__|||
 |__Virtual Memory는 왜 사용?__|||
 |__Paging과 Segmentation의 차이는?__|||
