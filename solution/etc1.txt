@@ -163,23 +163,129 @@ solution4 : delay decision (requires compiler support)
 control hazards occur less frequently than data hazards
 - there is nothing as effective against control hazards as forwarding is for data hazards
 
-// exception 전까지 .... 강의 다시 듣고 내용 보충하기 
+////////////////////////////////////////////////////////// exception 전까지 .... 강의 다시 듣고 내용 보충하기 
 
+Unexpected Events in Pipeline
 
+Exception(예외자) : Arises within the CPU
+- e.g. undefined opcode, overflow, syscall ...
+Interrupt : From an external I/O controller
 
+"Unexpected" events requiring change in flow of control
+(정상적으로 진행하다가 서비스루틴을 실행하기 때문에 control flow가 변경됨)
+- Different ISAs use the terms differently
 
+Dealing with them without sacrificing performance is hard
 
+Two types of Exceptions
 
+# Interrupts - asynchronous(비동기) to program execution
+- caused by external events (별도의 이벤트, 파이프라인 계산 결과에 영향x)
+- may be handled between instructions, so can let the instructions currently active in the pipeline complete
+before passing control to the OS interrupt handler
+- simply suspend and resume user program
+새로운 명령어를 가져오는 것이 아니라 멈추고 서비스루틴에 들어간 후 끝나면 실행함
 
+# Traps(Exception) - synchronous(동기) to program execution
+- caused by internal events
+- condition must be remedied by the trap handler for that instruction, so much stop the offending instruction midstream in the pipeline and pass control to the OS trap handler
+(cache miss, pagefault ...)
+- the offending instruction may be retried (or simulated by the OS) and the program may continue or it may be 
+aborted
 
+동기 : 동시에 일어난다는 뜻. 요청과 그 결과가 동시에 일어남. 바로 요청을 하면 시간이 얼마나 걸리던지 요청한 자리에서
+결과가 주어져야함
+설계가 매우 간단하고 직관적이지만, 결과가 주어질 때까지 아무것도 못하고 대기해야함
 
+비동기 : 요청과 결과가 동시에 일어나지 않음
+동기보다 복잡하지만, 결과가 주어지는데 시간이 걸리더라도 그 시간동안 다른 작업을 할 수 있으므로 자원을 효율적으로 사용가능
 
+Exceptions are just another form of control hazard
+Exceptions arise from
+- R-type arithmetic overflow (stage : EX / synchronous)
+- Trying to execute an undefined instruction (stage : ID / synchronous)
+- An I/O device request (stages : IF, MEM / synchronous)
+- An OS service request (e.g. a page fault, TLB exception) (stages : any / asynchronous)
+- A hardware malfunction (stages : any / asynchronous)
 
+The pipeline must stop executing the offending instruction in midstream
+- let all prior instructions(상관없음) complete,
+- flush all following instructions,
+- set a register to show the cause of the exception,
+- save the address of the offending instruction,
+- and then jump to a prearranged address (the address of the exception handler code) (service routine 실행)
+The software (OS) looks at the cause of the exception and "deals" with it
 
+Handling Exceptions
+In MIPS, exceptions managed by System Control Coprocessor(CP0)
+Save PC of offending (or interrupted) instruction
+- In MIPS : Exception Program Counter(EPC)
+(offending instruction의 return address를 가져오기 위해(PC+4))
+Save Indication of the problem
+- In MIPS : Cause register
+Jump to a service handler
 
+Vectored Interrupts
+- Handler address determined by the cause
+Example :
+- Undefined opcode : C000 0000
+- Overflow : C000 0020
+- ...
+Instructions either
+- Deal with the interrupt, or
+- Jump to real handler
 
+Handler Actions
+Read cause, and transfer to relevent handler
+Determine action required
+If restartable (Pipeline can flush the instruction)
+- Take corrective action 
+- use EPC to return to program (Refetched and executed from scratch (처음부터 다시 시작))
+PC saved in EPC register : 
+- Identifies causing instruction
+- Actually PC+4 is saved (Handler must adjust)
 
+Otherwise(undefined instruction, hardware malfunction ...)
+- Terminate program
+- Report error using EPC, cause, ...
 
+Consider overflow on add in EX stage
+add $1, $2, $1
+- Prevent $1 from being clobbered
+- Complete previous instructions
+- Flush add and subsequent instructions
+- Set Cause and EPC register values
+- Transfer control to handler
 
+Additions to MIPS to Handle Exceptions
+Cause register(records exceptions) 
+- hardware to record in Cause the exceptions and a signal to control writes to it
+(CauseWrite)
+EPC register(records the addresses of the offending instructions) 
+- hardware to record in EPC the address of the offending instruction and a signal to control writes to it
+(EPCWrite)
+A way to load the PC with the address of the exception handler
+- Expand the PC input mux where the new input is hardwired to the exception handler address
+-(e.g. 8000 0180hex for arithmetic overflow)
+A way to flush offending instruction and the ones that follow it
 
+Pipelining overlaps multiple instructions
+- Could have multiple exceptions at once
+Simple approach : deal with exception from earliest instruction
+- Flush subsequent instructions
+- "Precise" exceptions (Modern processors)
+In complex pipelines
+- Multiple instructions issued per cycle
+- Out-of-order completion
+- Maintaining precise exceptions is difficult!
 
+Imprecise Exceptions
+Just stop pipeline and save state
+- Including exception cause(s)
+Let the handler work out
+- which instruction(s) had exceptions
+- which to complete or flush
+(may require "manual" completion)
+Simplifies hardware, but more complex handler software
+Not feasible for complex multiple-issue
+out-of-order pipelines
