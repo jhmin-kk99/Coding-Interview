@@ -308,7 +308,14 @@ Static muiltiple issue (컴파일 시에, 정적으로)
 - Compiler groups instructions to be issued together
 - Packages them into "issue slots"
 - Compiler detects and avoids hazards
+static multiple issue에서 같은 클럭 사이클에 내보내지는 명령어의 묶음(issue packet)을 여러 개의 연산자를 갖는 큰 명령어 하나로 생각할 수 있다. 일반적으로 주어진 클럭 사이클에 같이 나갈 수 있는 명령어 조합에 제한이 있기 때문에, issue packet을 미리 정의된 필드에 여러 연산자가 있는 단일 명령어로 보는 것이 유용하다.
+Compiler groups instructions into "issue packets"
+- Group of instructions that can be issued on a single cycle
+- Determined by pipeline resources required
 
+Think of issue packet as a very long instruction
+- Specifies multiple concurrent operations
+-> Very Long Instruction Word (VLIW)
 
 
 
