@@ -304,7 +304,7 @@ pipeline에서 이상적인 CPI는 1이다. 매 단계마다 다수의 명령어
 (16 BIPS, peak CPI = 0.25, peak IPC = 4)
 - But dependencies reduce this in practice
 
-Static muiltiple issue (컴파일 시에, 정적으로)
+# Static muiltiple issue (컴파일 시에, 정적으로)
 - Compiler groups instructions to be issued together
 - Packages them into "issue slots"
 - Compiler detects and avoids hazards
@@ -313,22 +313,93 @@ Compiler groups instructions into "issue packets"
 - Group of instructions that can be issued on a single cycle
 - Determined by pipeline resources required
 
+Issue slots : 주어진 clock cycle에서 명령어들이 내보내질 수 있는 위치. 비유를 들자면 단거리 선수를 위한 출발선 블록의 위치와 같다.
+Issue packets : 1 clock cycle에 같이 내보내지는 명령어들의 집합. 패킷은 컴파일러에 의해 정적으로 결정될 수도 있고 프로세서에 의해 동적으로 결정될 수도 있다.
+
 Think of issue packet as a very long instruction
 - Specifies multiple concurrent operations
 -> Very Long Instruction Word (VLIW)
 
+Scheduling Static Multiple Issue
+Compiler must remove some/all hazards
+- Reorder instructions into issue packets
+- No dependencies with a packet
+- Possibly some dependencies between packets
+(Varies between ISAs; compiler must know)
+- Pad with nop if necessary
 
+Two-issue packets
+One ALU/branch instruction
+One load/store instruction
+64-bit aligned
+- ALU/branch, then load/store
+- Pad an unused instruction with nop
 
+Hazards in the Dual-Issue MIPS
+More instructions executing in parallel
+EX data hazard
+- Forwarding avoided stalls with single-issue
+- Now can't use ALU result in load/store in same packet
+add $t0, $s0, $s1
+load $s2, 0($t0)
+(split into two packets, effectively a stall)
+Load-use hazard
+- Still one cycle use latency, but now two instructions
+More aggressive scheduling required
 
-Dynamic multiple issue (실행 중에, 동적으로)
+Loop Unrolling 
+Replicate loop body to expose more parallelism
+- Reduces loop-control overhead
+Use different registers per replication
+- Called "register renaming"
+목적은 진정한 데이터 종속성은 아니지만 잠재적 해저드의 원인이 되거나 컴파일러가 유연하게 스케줄
+하는 것을 방해하는 종속성을 없애자는 것이다.
+- Avoid loop-carried "anti-dependencies(반종속성)"(또는 "name dependence"(이름 종속성))
+실제로 데이터 종속성이라기보다 순전히 하나의 이름을 계속 사용함으로써 강요되는 순서
+
+# Dynamic multiple issue (실행 중에, 동적으로)
 - CPU examines instruction stream and chooses instructions to issue each cycle
 - Compiler can help by reordering instructions
 - CPU resolves hazards using advanced techniques at runtime
 
-이 두가지가 서로 다른 방법이라고 말하기는 하지만, 실제 기법에서는 한 방법이 다른 방법에 차용되는
-경우가 많기 때문에 어느 방법도 완전히 순수하다고 말할 수는 없다.
+"Superscalar"(프로세서가 실행 중에 명령어를 선택하여 한 클럭 사이클에 두 개 이상의 명령어를 실행할 수 
+있도록 해 주는 고급 파이프라이닝 기법) processors
+CPU decides whether to issue 0,1,2,... each cycle
+- Avoiding structural and data hazards
+Avoids the need for compiler scheduling
+- Though it may sill help
+- Code semantics ensured by the CPU
+많은 수퍼스칼라 프로세서는 dynamic multiple issue를 결정하는 기본 틀을 확장하여 dynamic pipeline scheduling을
+포함하도록 한다. 이 동적 파이프라인 스케줄링은 해저드와 지연은 피하면서 주어진 클럭 사이클에 어떤 명령어를 실행할
+것인지 선택한다.
 
-성능 향상 방법 : Speculation (추정)
+Dynamic Pipeline Scheduling
+Allow the CPU to execute instructions out of order to avoid stalls
+- But commit result to registers in order
+Example
+lw $t0, 20($s2)
+addu $t1, $t0, $t2
+sub $s4, $s4, $t3
+slti $t5, $s4, 20
+Can start sub while addu is waiting for lw
+
+이러한 프로세서에서 파이프라인은 세개의 주요 유닛으로 나누어짐 
+1. Instruction fetch and decode unit (In-order issue, for preserving dependencies)
+명령어를 인출하고 해독하고 각각의 명령어를 실행 단계의 해당 Functional unit에 보냄 
+2. Functional units (Out-of order execute)
+각 Funtional unit은 reservation station(대기영역)(Hold pending operands)이라 불리는 버퍼를 가지고 있는데 이 reservation station은 피연산자와 연산자를 가지고 있다. 필요한 모든 피연산자가 버퍼에 준비되고 실행할 functional unit이 준비가 되어 있으면(dependency가 해결이 되면) 결과가 계산된다.(다른 파이프라인에서 결과를 만들고 있으면 준비x) 결과가 완료되면 이 결과는 Commit unit뿐만 아니라 이 특정한 결과를 기다리고있는 reservation station에 보내진다.(Results also sent to any waiting reservation stations)
+3. Commit unit (In-order commit)
+결과값을 버퍼에 두었다가 안전하다고 생각이 들 때 결과값을 레지스터 파일이나 메모리(sw의 경우)에 명령어 순서대로 쓴다.
+Commit unit에 있는 이 버퍼는 reorder buffer(재정렬 버퍼)라고 불리는데 피연산자들을 제공하는 데 사용된다.
+일단 결과값이 레지스터 파일에 써지면 정상적인 파이프라인에서와 같이 레지스터 파일로부터 직접 읽을 수 있다.
+
+Register Renaming
+Reservation stations and reorder buffer effectively provide register renaming
+1. 명령어가 내보내질 때(instruction issue to reservation station) 명령어는 해당 functional unit의 reservation station으로 복사된다. 피연산자 중에 레지스터 파일이나 reorder buffer에 있는 것이 있으면 이 피연산자는 즉시 reservation station으로 복사된다. 명령어는 모든 피연산자와 실행 유닛이 사용 가능할 때까지 버퍼링된다. 내보내지는 명령어의 피연산자는 레지스터값이 더 이상 필요 없으며, 이 레지스터에 쓰기가 일어난다면 그냥 덮어써도 문제가 없다.(이미 복사해왔기 때문)
+2. 만약 피연산자가 레지스터 파일이나 reorder buffer에 없다면 functional unit에 의해 생성될 때까지 기다려야한다.
+결과를 만들어 낼 functional unit의 이름이 추적된다. 그 functional unit이 결국 결과를 만들면 functional unit에서 기다리고 있는 reservation station으로 직접 복사된다. 이 때, Register update may not be required (commit unit에서 함)
+
+# 성능 향상 방법 : Speculation (추정)
 예측이라는 개념을 기반으로 하여 추정은 컴파일러나 프로세서가 명령어의 특성에 대해 추측하도록
 허락하여 이 명령어에 종속적일 수 있는 다른 명령어들의 실행을 시작할 수 있게 하는 방법이다. 
 - e.g. branch 명령어의 결과를 추정한다면 branch 뒤의 명령어들이 일찍 실행될 수 있다. 
@@ -360,18 +431,34 @@ Static speculation(컴파일러 기반의 추정)
 Dynamic speculation(하드웨어 기반의 추정)
 - can buffer exceptions until instruction completion(which may not occur)
 (예외를 버퍼링해 두었다가, 예외를 일으킨 명령어가 추정 상태에서 벗어나 실행완료할 준비가 되면 이때 예외를 일으키고 정상적인 예외처리를 진행한다.)
+Dynamic Pipeline Scheduling은 흔히 하드웨어 기반의 추정을 포함하도록 확장된다. 
+Predict branch and continue issuing
+특히 branch의 결과에 대해서는 더욱 그러하다. branch의 방향을 예측함으로써 dynamin pipeline scheduling은 예측한 경로를 따라 명령어 인출과 실행을 계속할 수 있다. 명령어들은 순서대로 결과를 쓰기 때문에, 예측한 경로상의 명령어가 결과를 쓰기 전에 branch prediction의 정확성 여부를 판단할 수 있다.  
+Load speculation( lw 명령어 바로 앞의 sw 명령어가 같은 주소를 참조하지 않는다고 추정)
+- Avoid load and cache miss delay
+1. Predict the effective address
+2. Predict loaded value
+3. Load before completing outstanding stores
+4. Bypass stored values to load unit
+- Don't commit load until speculation cleared
 
 추정이 올바르게 이루어지면 성능이 향상되고 추정이 잘못되면 성능이 감소하기 때문에 추정을 언제 하는 것이 좋은지 결정하는 데 막대한 노력을 기울여야 한다. 
 
+Why Do Dynamic Scheduling?
 
+컴파일러가 데이터 종속성이 있는 명령어들 주변의 코드를 스케줄할 수 있다면 왜 수퍼스칼라 프로세서는 dynamic scheduling을 할까? 
+1. Not all stalls are predictable (e.g. cache misses)
+a($10), b($10), a($11) 은 모두 같은 주소를 나타낼 수도 있고, 다른 주소를 나타낼 수도 있다. 
+컴파일러는 이것을 예측하거나 판단할 수 없음. run time에서만 알 수 있다.
+메모리 계층구조에서 cache misses는 예측 불가능한 지연을 일으킨다. dynamic scheduling은 프로세서로 하여금 지연이 끝나기를 기다리는 동안에도 명령어를 계속 실행할 수 있도록 하여 이런 지연을 일부 감출 수 있다.
 
+2. Can't always schedule around branches(Branch outcome is dynamically determined)
+만약 프로세서가 dynamic branch prediction을 사용하여 분기 결과에 대해 추정한다면 컴파일 시에는 명령어의 정확한 순서를 알 수 없다. 이 순서는 branch에 대한 예측과 실제 branch outcome에 따라 달라지기 때문이다. dynamic scheduling을 사용하지 않고 더 많은 ILP를 찾으려고 dynamic speculation을 하면 추정의 이득이 크게 제한될 것이다.
 
+3. Different implementations of an ISA have different latencies and hazards
+pipeline latency 와 issue width(the maximum number of instructions that can be issued during the same cycle)는 구현마다 다르기 때문에, 코드를 잘 컴파일하는 방법도 달라진다. 
+how to schedule a sequence of dependent instructions is affected by both issue width and latency 
+The pipeline structure affects both the number of times a loop must be unrolled to avoid stalls as well as the process of compiler-based register renaming.
 
-
-
-
-
-
-
-
-
+Dynamic scheduling은 하드웨어로 하여금 이런 세부 사항의 대부분을 감추도록 해준다. 따라서 사용자나 소프트웨어 공급자가 같은 명령어 집합의 여러가지 구현에 맞추어 한 프로그램이 여러 가지 버전을 가져야 할 것을 염려할 필요가 없다. 같은 이유로
+오래된 코드도 재컴파일할 필요 없이 새로운 구현에 의해 얻어지는 대부분의 이득을 취할 수 있다.
