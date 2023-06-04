@@ -121,7 +121,7 @@ Larger miss penalty
 - Can override benefit of reduced miss rate
 - Early restart and critical-word-first can help
 
-Handling Cache Hits
+# Handling Cache Hits
 Read Hits(l$ and D$)
 - this is what we want
 Write hits(D$ only)
@@ -136,10 +136,108 @@ memory hierarchy when that cache block is "evicted"(쫓겨남)))
 (need a dirty bit for each data cache block to tell if it needs to be written back to memory
 when it is evicted (can use a write buffer to help "buffer" write) backs of dirty blocks)
 
-Handling Cache Misses
+# Handling Cache Misses(데이터가 캐시에 없어서 충족시킬 수 없는 캐시 데이터 요청)
 
+control unit은 실패를 탐지해야 하며, 메모리(또는 하위 수준의 캐시)로부터 데이터를 가져와서 실패를 처리해야 한다. 만약 캐시 내에 원하는 데이터가 존재하면 컴퓨터는 아무 일도 없는 것처럼 데이터를 사
+용할 수 있다. cache hit을 처리할 수 있게 processor의 control unit을 수정하는 것은 쉬운 일이지만, 
+실패의 경우 몇가지 조작이 더 필요하다. handling cache misses는 processor의 control unit과 별도
+제어기의 공동 작업으로 처리된다. 
 
+1. Handling Cache Misses(Single Word Block)
+Read misses(l$ and D$)
+- stall the pipeline, fetch the block from the next level in the memory hierarchy, install it
+in the cache and send the requested word to the processor, then let the pipeline resume
+Write misses(D$ only)
+- stall the pipeline, fetch the block from the next level in the memory hierarchy, install it
+in the cache( which may involve having to evict a dirty block if using a write-back cache),
+write the word from the processor to the cache, then let the pipeline resume
+- Write allocate - just write the word into the cache updating both the tag and data, no need
+to check for cache hit, no need to stall
+- No-write allocate - skip the cache write (but must invalidate that cache block since it will
+ now hold stale data) and just write the word to the write buffer(and eventually to the next
+ memory level), no need to stall if the write buffer isn't full
 
+2. Multiword Block Considerations
+Read misses(l$ and D$)
+Processed the same as for single word blocks - a miss returns the entire block from memory
+Miss penalty grows as block size grows
+- Early restart - processor resumes execution as soon as the requested word of the block is
+returned
+- Requested word first - requested word is transferred from the memory to the cache(and 
+processor) first
+Nonblocking cache - allows the processor to continue to access the cache while the cache is
+handling an earlier miss
+
+Write misses(D$)
+If using write allocate must first fetch the block from memory and then write the word to the
+block(e.g. for 4 word blocks, a new tag, one word of data from the new block, and three words
+of data from the old block)
+
+# Average Access Time
+Hit time is also important for performance
+- A larger cache will have a longer access time. An increase in hit time will likely add 
+another stage to the pipeline.
+- At some point the increase in hit time for a larger cache will nullify(무효화) the 
+improvement in hit rate leading to a decrease in performance.
+
+Average memory access time (AMAT)
+- AMAT = Hit time + Miss rate * Miss penalty
+
+Example
+cpu with 1ns clock, hit time = 1 cycle, miss penalty = 20 cycles, l-cache miss rate = 5%
+AMAT = 1 + 0.05 * 20 = 2ns (2 cycles per instruction)
+
+다단계 캐시를 이용한 실패 손실 줄이기
+현대의 모든 컴퓨터는 캐시를 사용한다. 프로세서의 빠른 클럭속도와 상대적으로 점점 느려지는 DRAM
+접근시간의 차이를 더욱 줄이기 위해, 고성능 마이크로프로세서들은 캐시를 한 계층 더 사용한다. 이 
+2차 캐시(secondary cache)는 주로 마이크로프로세서에 내장되어 있으며, 1차 캐시(primary cache)에서
+실패가 발생할 때 접근된다. 2차 캐시가 원하는 데이터를 갖고 있으면 실패 손실은 2차 캐시의 접근 
+시간이 되며, 이 값은 메인 메모리의 접근 시간보다 훨씬 작다. 1차 캐시와 2차 캐시 둘 다 데이터를 갖
+고 있지 않은 경우에는 메인 메모리 접근이 필요하게 되고 더 큰 실패 손실이 발생하게 된다.
+
+# Multilevel Caches
+Primary cache attached to CPU
+- small, but fast
+Level-2 cache services misses from primary cache
+- Larger, slower, but still faster than main memory
+Main memory services L-2 cache misses
+Some high-end systems include L-3 cache
+
+Multilevel Cache Example
+Given
+- CPU base CPI = 1, clock rate = 4GHz
+- Miss rate/instruction = 2%
+- Main memory access time = 100ns
+With just primary cache
+- Miss penalty = 100ns/0.25ns = 400cycles
+- Effective CPI = 1 + 0.02 * 400 = 9
+Now add L-2 cache
+- Access time = 5ns
+- Global miss rate to main memory = 0.5%
+New Performance with L-2 cache
+- Primary miss with L-2 hit
+(Penalty = 5ns/0.25ns = 20cycles)
+- Primary miss with L-2 miss
+(Extra penalty = 400cycles)
+- CPI = 1 + 0.02 * 20 + 0.005 * 400 = 3.4
+- Performance ratio = 9/3.4 = 2.6
+
+# Multilevel Cache Considerations
+Primary cache
+- Focus on minimal hit time in support of a shorter clock cycle
+(Smaller with smaller block sizes)
+L-2 cache
+- Focus on low miss rate to avoid main memory access to reduce the penalty of long
+main memory access times
+(Larger block sizes -> spatial locality, Higher levels of associativity -> low miss rate)
+- Hit time has less overall impact
+Results
+- L-1 cache usually smaller than a single cache
+- L-1 block size smaller than L-2 block size
+
+The L1 cache is usually separated into separate Data and Instruction caches
+The L2 and higher caches are normally unified caches, i.e. both instructions and data are
+in the same cache
 
 
 
