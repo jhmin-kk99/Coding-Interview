@@ -13,7 +13,7 @@ Memory Hierarchy란?
 많은 정보량을 갖는 큰 메모리에서 메모리 접근을 빠르게 하는 것은 불가능하다. 도서관에서 책을 찾는 방법과
 프로그램이 동작하는 방법에는 이러한 지역성의 원칙(principle of locality)이 똑같이 적용된다.
 
-The Momory Hierarchy Goal
+The Memory Hierarchy Goal
 Fact : Large memories are slow and fast memories are small
 How do we create a memory that gives the illusion of being large, cheap and fast(most of the time)?
 - with hierarchy
