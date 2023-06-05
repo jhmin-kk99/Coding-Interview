@@ -138,8 +138,9 @@ when it is evicted (can use a write buffer to help "buffer" write) backs of dirt
 
 # Handling Cache Misses(데이터가 캐시에 없어서 충족시킬 수 없는 캐시 데이터 요청)
 
-control unit은 실패를 탐지해야 하며, 메모리(또는 하위 수준의 캐시)로부터 데이터를 가져와서 실패를 처리해야 한다. 만약 캐시 내에 원하는 데이터가 존재하면 컴퓨터는 아무 일도 없는 것처럼 데이터를 사
-용할 수 있다. cache hit을 처리할 수 있게 processor의 control unit을 수정하는 것은 쉬운 일이지만, 
+control unit은 실패를 탐지해야 하며, 메모리(또는 하위 수준의 캐시)로부터 데이터를 가져와서 실패를 처리해야 한다. 
+만약 캐시 내에 원하는 데이터가 존재하면 컴퓨터는 아무 일도 없는 것처럼 데이터를 사용할 수 있다. 
+cache hit을 처리할 수 있게 processor의 control unit을 수정하는 것은 쉬운 일이지만, 
 실패의 경우 몇가지 조작이 더 필요하다. handling cache misses는 processor의 control unit과 별도
 제어기의 공동 작업으로 처리된다. 
 
@@ -250,19 +251,188 @@ What makes it work? (the Principle of Locality)
 Each program is compiled into its own address space - a "virtual" address space
 - During run-time each virtual address must be translated to a physical address(an address in main memory)
 
+A program's address space is divided into pages(all one fixed size) or segments(variable sizes)
+- The starting location of each page(either in main memory or in secondary memory) is contained
+in the program's page table
 
- 
+A virtual address is translated to a physical address by a combination of hardware and software
+So each memory request first requires an address translation from the virtual space to the 
+physical space
+- A virtual memory miss(i.e. when the page is not in physical memory) is called a page fault
 
+# Page Fault Penalty
+Page faults : the data is not in memory, retrieve it from disk
+- huge miss penalty, thus pages should be fairly large (e.g. 4KB)
+- reducing page faults is important
+- can handle the faults in software instead of hardware
+- using write-through is too expensive so we use write-back
+Try to minimize page fault rate
+- Fully associative placement
+- smart replacement algorithms
 
+# Page Tables
+Stores placement information
+- Array of page table entries(PTEs), indexed by virtual page number
+- Page table register in CPU points to page table in physical memory
+If page is present in memory (valid bit이 1)
+- PTE stores the physical page number
+- Plus other status bits (referenced, dirty, ...)
+If page is not present (valid bit이 0)
+- PTE can refer to location in swap space on disk
 
+# Replacement and Writes
+To reduce page fault rate, prefer least-recently used (LRU) replacement
+- Reference bit(aka use bit) in PTE set to 1 on access to page
+- Periodically cleared to 0 by OS (주기적으로)
+- A page with reference bit = 0 has not been used recently
+Disk writes take millions of cycles
+- Block at once, not individual locations
+- Write through is impractical
+- Use write-back
+- Dirty bit in PTE set when page is written
 
+# Fast Translation Using a TLB
+Address translation would appear to require extra memory references
+- one to access the PTE
+- Then the actual memory access
+But access to page tables has good locality
+- So use a fast cache of PTEs within the CPU
+- Called a Translation Look-aside Buffer(TLB)(a small cache that keeps track of recently
+used address mappings to avoid having to do a page table lookup)
+- Typical : 16-512 PTEs, 0.5-1 cycle for hit, 10-100 cycles for miss, 0.01%-1% miss rate
+- Misses could be handled by hardware or software
 
+# TLB
+Just like any other cache, the TLB can be organized as fully associative, set associative,
+or direct mapped
+TLB access time is typically smaller than cache access time
+(because TLBs are much smaller than caches)
+- TLBs are typically not more than 512 entries even on high end machines
 
+# TLB Misses
+If page is in memory
+- Load the PTE from memory and retry
+- Could be handled in hardware
+(can get complex for more complicated page table structures)
+- Or in software
+(raise a special exception, with optimized handler)
+- Takes 10's~100's of cycles to find and load the translation info into the TLB
+If page is not in memory
+- OS handles fetching the page and updating the page table
+- Then restart the faulting instruction
+- Takes 1,000,000's of cycles to service a page fault
 
+# TLB Miss Handler
+TLB miss indicates
+- Page present, but PTE not in TLB
+- Page not present
+Must recognize TLB miss before destination register overwritten
+- Raise exception
+Handler copies PTE from memory to TLB
+- Then restarts instruction
+- If page not present, page fault will occur
 
+# Page Fault Handler
+Use faulting virtual address to find PTE
+Locate page on disk
+Choose page to replace
+- If dirty, write to disk first
+Read page into memory and update page table
+Make process runnable again
+- Restart from faulting instruction
 
+TLB    /    Page Table    /    Cache    /    Possible? Under what circumstances?
+Hit    /    Hit           /    Hit      /    Yes - what we want
+Hit    /    Hit           /    Miss     /    Yes - data not in cache, but in memory, 
+                                                   although PTE and TLB hit
+Miss   /    Hit           /    Hit      /    Yes - TLB miss, PA in page table
+Miss   /    Hit           /    Miss     /    Yes - TLB miss, PA in page table, but data 
+                                                   not in cache
+Miss   /    Miss          /    Miss     /    Yes - page fault
+Hit    /    Miss          /    Miss,Hit /    Impossible - TLB translation not possible
+                                                          if page is not present in memory
+Miss   /    Miss          /    Hit      /    Impossible - data not allowed in cache if
+                                                          page is not in memory
 
+# Reducing Translation Time
+Can overlap the cache access with the TLB access
+- Works when the high order bits of the VA are used to access the TLB while the low order
+bits are used as index into cache 
+(상위 비트로 TLB hit했을 때,PA를 얻을 수 있다. 이때의 PA Tag를 통해 Cache의 tag와 매칭하고
+하위 비트를 통해 Cache의 index와 매칭하여 Cache Hit을 판단한다.)
 
+# Sources of Misses (3C's models)
+1. Compulsory misses(aka cold start misses)
+- First access to a block (처음 access할 때)
+2. Capacity misses
+- Due to finite cache size
+- A replaced block is later accessed again
+3. Conflict misses(aka collision misses) (4의 배수, 8의 배수, ... 배수로 접근하면 똑같은 위
+치를 계속 접근할 수도 있음)
+- In a direct-mapped or set-associative cache
+- Due to competition for entries in a set
+- Would not occur in a fully associative cache of the same total size
 
+# Cache Design Trade-offs
+Increase cache size
+- Decrease capacity misses (Possitive)
+- May increase access time, compulsory misses (Negative)
+Increase associativity
+- Decrease conflict misses
+- May increase access time
+Increase block size
+- Decrease compulsory misses(블럭 수 줄어듦)
+- Increases miss penalty. For very large block size, may increase miss rate
 
+# 4 Questions for the Memory Hierarchy
+Q1. Where can a entry be placed in the upper level?
+Q2. How is a entry found if it is in the upper level
+Q3. Which entry should be replaced on a miss?
+Q4. What happens on a write?
+
+Q1 & Q2 : Where can a entry be placed/found?
+
+                         # of sets                   /           Entries per set
+--------------------------------------------------------------------------------------
+Direct mapped            # of entries                /           1
+
+Set associative         (# of entries)/associativity /           Associativity     
+
+Fully associative        1                           /           # of entries
+
+---------------------------------------------------------------------------------------
+                         Location method             /           # of comparisons
+---------------------------------------------------------------------------------------
+Direct mapped            Index                       /           1
+
+Set associative          Index the set;              /           Degree of associativity(n)     
+                         compare set's tags
+                         
+Fully associative        Compare all entries' tags   /           # of entries
+                         Separate lookup(page)table              0   
+
+Q3 : Which entry should be replaced on a miss?
+Easy for direct mapped - only one choice
+Set associative or fully associative
+- Random
+- LRU (Least Recently Used)
+For a 2-way set associative, random replacement has a miss rate about 1.1 times higher
+than LRU
+LRU is too costly to implement for high levels of associativity (> 4-way) since tracking
+the usage information is costly
+
+Q4 : What happens on a write?
+Write-through - The information is written to the entry in the current memory level and to
+the entry in the next level of the memory hierarchy
+- Always combined with write buffer so write waits to next level memory can be eliminated
+(as long as the write buffer doesn't fill)
+->
+read misses don't result in writes(so are simpler and cheaper), easier to implement
+
+Write-back - The information is written only to the entry in the current memory level.
+The modified entry is written to next level of memory only when it is replaced.
+- Need a dirty bit to keep track of whether the entry is clean or dirty
+- Virtual memory systems always use write-back of dirty pages to disk
+->
+writes run at the speed of the cache; repeated writes require only one write to lower level
 
