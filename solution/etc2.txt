@@ -239,7 +239,19 @@ The L1 cache is usually separated into separate Data and Instruction caches
 The L2 and higher caches are normally unified caches, i.e. both instructions and data are
 in the same cache
 
+# Virtual Memory
+Use main memory as a "cache" for secondary memory
+- Allows efficient and safe sharing of memory among multiple programs
+- Provides the ability to easily run programs larger than the size of physical memory
+- Simplifies loading a program for execution by providing for code relocation(재배치)
+(i.e. the code can be loaded anywhere in main memory) 
+What makes it work? (the Principle of Locality)
+- A program is likely to access a relatively small portion of its address space during any period of time
+Each program is compiled into its own address space - a "virtual" address space
+- During run-time each virtual address must be translated to a physical address(an address in main memory)
 
+
+ 
 
 
 
