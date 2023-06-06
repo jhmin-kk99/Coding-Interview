@@ -9,4 +9,259 @@ Each Node has Two Labels : L and R
 - L: Height of Left Subtree, R: Height of Right Subtree
 Condition : |L-R|<2, that is, L-R = 0, 1, -1
 
+# Proof of AVL Tree height
+Some Definitions
+Down Sequence Definition
+- String of L and R, such as LLRLRRLRLLRLR
+- Represents Movement from Root
+- Notice: Some Down Sequence cannot be followed to the end
+(if there is no child in the direction) -> Terminated Down Sequence
+Consider the set of All possible Terminated Down Sequence for an AVL Tree
+
+Observations
+1. The longest Terminated Down Sequences is at most (about) 2 times longer than the shortest
+- Consider the labels that you see when you move down to the longest and the shortest
+2. All levels up to the shortest Terminated Down Sequence are FULL
+- Meaning all possible nodes exist
+
+Count the nodes
+- (All Calculations maybe off by 1 or 2, that's OK)
+- If the maximum label on Root is k
+- Then the height of the Tree is k+1
+- Then the shortest Terminated Down Sequence is at least k/2
+- Meaning that there are at least 2^(k/2) Nodes in the Tree
+- That is, N is at least 2^(k/2) and at most 2^k
+- 2^(k/2) <= N <= 2^k
+- 2^(k/2) <= N means k/2 = log N means k = O(logN)
+
+각 노드는 L 과 R 두 label을 가지고 있다고 하자. 
+L은 Left subtree의 높이이고, R 은 Right subtree의 높이이다.
+AVL 트리에서 | L - R | < 2라는 조건이 있다. 
+각 노드에서 자식 노드로 이동하는 일련의 과정을 down Sequence라고 하자.
+더이상 이동할 수 없는 down sequence를  terminated  down sequence라고 하자.
+만약 루트 노드의 label의 최댓값이 t라고 하면, 해당 트리의 높이는 t+1이다.
+terminated  down sequence에서 본 label 들을 l1,l2,l3...,lk(=0) 이라 했을 때, 
+a<k인 임의의 a에 대하여 l(a+1) = l(a)-1이거나 l(a)-2가 될 수 있다.  (AVL 트리의 조건)
+이 때, 모든 a<k인 임의의 a에 대하여 가장 긴 terminated down sequence는 
+l(a+1) = l(a)-1인 down sequence를 만족할 때 t이고,
+가장 짧은 terminated down sequence는  l(a+1) = l(a)-2인 down sequence를 만족할 때 최소 t/2이다.
+또한 all levels up to the shortest Terminated Down Sequence are Full이다.
+트리의 노드의 개수를 N개라 할 때, 2^(t/2) <= N <= 2^t가 성립하고
+t/2 <= log N 에 의하여 t = O(logN) . 즉 AVL 트리에서 tree height는 O(logn)이다.
+
+- If a Tree satisfies the LABEL condition for AVL Tree, then the Height is O(logN)
+- So Search will finish in O(logN) time
+- But... 
+- Insert and Delete will change the label
+- And may break the condition
+
+# Insert (Delete is Similar)
+The Algorithm
+1. Do the normal insert(you are at the Leaf)
+2. Come back up the tree and recompute Labels
+(They increase by at most 1)
+3. For the first Node to break the condition, we perform ROTATION
+4. Finish(No more Rotations are needed.)
+
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+
+using namespace std;
+
+class Node {
+public:
+    int a;
+    int LLen, RLen;
+    Node* L, * R;
+};
+
+class AVL {
+public:
+    AVL();
+    Node* Search(int x);
+    Node* SearchP(Node* N, int x);
+    void Insert(int x);
+    int InsertP(Node* N, int x, Node** RP);
+    void Print();
+    void PrintP(Node* N, int d, int LR);
+    Node* Root;
+};
+AVL::AVL()
+{
+    Root = new Node;
+    Root->LLen = 0; Root->RLen = 0;
+    Root->a = 9999; //dummy node
+    Root->L = NULL;
+    Root->R = NULL;
+}
+
+Node* AVL::Search(int x)
+{
+    return SearchP(Root->L, x);
+}
+Node* AVL::SearchP(Node* N, int x)
+{
+    if (N == NULL)return NULL;
+    else {
+        if (N->a < x) { return SearchP(N->R, x); }
+        else if (N->a > x) { return SearchP(N->L, x); }
+        else {
+            cout << x << ' ' << "Found !!" << '\n';
+            return N;
+        }
+    }
+}
+void AVL::Insert(int x)
+{
+    int Len;
+    Len = InsertP(Root->L, x, &(Root->L));
+    Root->LLen = Len + 1;
+}
+int AVL::InsertP(Node* N, int x, Node** RP)
+{
+    Node* NN; int Len;
+    Node* A, * B, * C, *T1, *T2;
+    if (N == NULL) {
+        NN = new Node;
+        NN->a = x;
+        NN->LLen = 0; NN->RLen = 0;
+        NN->L = NN->R = NULL;
+        *RP = NN;
+        return 0;
+    }
+    else {
+        if (N->a < x) { Len = InsertP(N->R, x, &(N->R)); N->RLen = Len+1; }
+        else if (N->a > x) { Len = InsertP(N->L, x, &(N->L)); N->LLen = Len+1; }
+        else ;
+    }
+    if (N->LLen > N->RLen + 1 || N->RLen > N->LLen + 1) {
+        if ((N->a > x) && (N->L->a > x))//case LL
+        {
+            A = N; B = N->L;/* C = B->L;*/
+            T1 = B->R; B->R = A; A->L = T1;
+            if (A->L == NULL) A->LLen = 0;
+            else A->LLen = max((A->L)->LLen , (A->L)->RLen) + 1;
+            B->LLen = max((B->L)->LLen, (B->L)->RLen) + 1;
+            B->RLen = max((B->R)->LLen, (B->R)->RLen) + 1;
+            *RP = B;
+            return max(B->LLen, B->RLen);
+        }
+        else if ((N->a > x) && (N->L->a < x)) //case LR
+        {
+            A = N; B = N->L; C = B->R;
+            T1 = C->L; T2 = C->R;
+            C->L = B; C->R = A;
+            B->R = T1; A->L = T2;
+            if (B->R == NULL) B->RLen = 0;
+            else B->RLen = max((B->R)->LLen, (B->R)->RLen) + 1;
+            if (A->L == NULL) A->LLen = 0;
+            else A->LLen = max((A->L)->LLen, (A->L)->RLen) + 1;
+            C->LLen = max((C->L)->LLen, (C->L)->RLen) + 1;
+            C->RLen = max((C->R)->LLen, (C->R)->RLen) + 1;
+            *RP = C;
+            return max(C->LLen, C->RLen);
+        }
+        else if ((N->a < x) && (N->R->a < x))//case RR
+        {
+            A = N; B = N->R;
+            T1 = B->L; B->L = A; A->R = T1;
+            if (A->R == NULL) A->RLen = 0;
+            else A->RLen = max((A->R)->LLen, (A->R)->RLen) + 1;
+            B->LLen = max((B->L)->LLen, (B->L)->RLen) + 1;
+            B->RLen = max((B->R)->LLen, (B->R)->RLen) + 1;
+            *RP = B;
+            return max(B->LLen, B->RLen);
+        }
+        else if ((N->a < x) && (N->R->a > x)) //case RL
+        {
+            A = N; B = N->R; C = B->L;
+            T1 = C->L; T2 = C->R;
+            C->L = A; C->R = B;
+            A->R = T1; B->L = T2;
+            if (A->R == NULL) A->RLen = 0;
+            else A->RLen = max((A->R)->LLen, (A->R)->RLen) + 1;
+            if (B->L == NULL) B->LLen = 0;
+            else B->LLen = max((B->L)->LLen, (B->L)->RLen) + 1;
+            C->LLen = max((C->L)->LLen, (C->L)->RLen) + 1;
+            C->RLen = max((C->R)->LLen, (C->R)->RLen) + 1;
+            *RP = C;
+            return max(C->LLen, C->RLen);
+        }
+    }
+    else return max(N->LLen, N->RLen); 
+}
+
+void AVL::Print()
+{
+    PrintP(Root, 0, 0);
+}
+void AVL::PrintP(Node* N, int d, int LR)
+{
+    int i;
+    if (LR == 1)
+    {
+        for (i = 0; i < d; i++)
+        {
+            cout << "              ";
+        }
+    }
+    if (N != NULL) {
+        printf(" [%2d|%4d|%2d] ",N->LLen, N->a,N->RLen);
+    }
+
+    if (N->L == NULL) cout << '\n';
+    else PrintP(N->L, d + 1, 0);
+    if (N->R == NULL);
+    else PrintP(N->R, d + 1, 1);
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    char c;
+    int x, i;
+    AVL T;
+    Node* RR;
+    while (true) {
+        T.Print();
+        cin >> c;
+        if (c == 's') {
+            cin >> x;
+            if ((RR = T.Search(x)) == NULL)
+                cout << x << ' ' << "Not Found." << '\n';
+            else
+                cout << x << "Found at Address " << x << " " << RR << '\n';
+        }
+        else if (c == 'i')
+        {
+            cin >> x;
+            T.Insert(x);
+        }
+        else if (c == 'q') {
+            break;
+        }
+        else {
+            cout << "? ? ?" << '\n';
+        }
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
