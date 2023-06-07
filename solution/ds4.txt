@@ -13,7 +13,7 @@ find minimum and maximum of N for a fixed Height
 
 # Proof of 2-3 Tree Height (key가 N개 있을 떄)
 The height of 2-3 Tree is H
-then, 2^H <= # node <= 3^H
+then, 2^H <= # node <= 3^H (Root to Leaf distance is the same for all leaves)
 ->
 2^H <= # key (= N) <= 2*3^H
 H = O(logN)
@@ -37,7 +37,7 @@ Thus, each Node has 2,3 or 4 children
 ** Not allowed to have a single child
 
 # Proof of 2-3-4 Tree Height (key가 N개 있을 때)
-The height of 2-3-4 Tree is H
+The height of 2-3-4 Tree is H (Root to Leaf distance is the same for all leaves)
 then, 2^H <= # node <= 4^H
 ->
 2^H <= # key (= N) <= 3*4^H
@@ -49,6 +49,10 @@ But
 - There are now options
 - You may split node when there are 3 keys
 - Why is it impossible for 2-3 Trees?
+2-3-4 Tree에서는 Search를 하며 내려오면서 노드의 key가 3개인 경우 split을 하여 middle key를 부모노드로
+보내고 두 노드에 각각 key 1개씩을 저장할 수 있지만, 2-3 Tree에서 split을 하는 경우 부모노드로 올려보낼
+key 값이 없기 때문에 불가능하다.
+
 
 # An Improvement over 2-3 Tree
 2-3 Tree
@@ -113,11 +117,17 @@ Terminated Down Sequence
 - Why? 
 Shortest와 Longest의 Black Edges의 수는 같지만, Longest에는 Red Edges가 중간중간 있을
 수 있고(Red Edge가 연속일 수는 없음), 그 최대 수는 (Black Edges의 수가 k라고 할 때) 
-k+1개이다. 따라서 Shortest와 Longest는 약 2배 정도 차이날 수 있다.(k , 2k+1) 
+k+1개이다. 따라서 Shortest와 Longest는 약 2배 정도 차이날 수 있다.(k , 2k+1)
+Height Difference of Left and Right Subtrees
+- In R-B Tree height may differ 2 times
 Rotation Operations
 - You can use AVL Tree in an analogous way
 
 # proof of R-B Tree height
-
-
+각 노드에서 자식 노드로 이동하는 일련의 과정을 down Sequence라고 하자.
+더이상 이동할 수 없는 down sequence를  terminated  down sequence라고 하자.
+해당 트리의 높이를 t라고 하자.
+Longest terminated down sequence = t 이고, shortest terminated down sequence = (t-1)/2이다.
+노드의 개수를 N이라고 할 때, all levels up to the shortest Terminated Down Sequence are Full이다.
+즉, 2^((t-1)/2) <= N <= 2^t가 성립하고, t <= 2logN+1 에서 t = O(logN)임을 알 수 있다.
 
