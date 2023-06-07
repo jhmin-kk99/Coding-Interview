@@ -51,7 +51,12 @@ But
 - Why is it impossible for 2-3 Trees?
 
 # An Improvement over 2-3 Tree
-
+2-3 Tree
+- Go down the Tree -> Reach Leaf
+- If Leaf is split -> Parent may split -> Parent may split -> ...
+2-3-4 Tree
+- Split 4-Nodes when going down the Tree -> Reach Leaf
+- If Leaf is split -> Parent can never be split
 
 
 
