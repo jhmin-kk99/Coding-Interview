@@ -1,4 +1,4 @@
-2-3, 2-3-4트리란?
+2-3, 2-3-4, RedBlack 트리란?
 
 # 2-3 Tree
 Each Node has 1 or 2 keys
@@ -57,8 +57,32 @@ But
 2-3-4 Tree
 - Split 4-Nodes when going down the Tree -> Reach Leaf
 - If Leaf is split -> Parent can never be split
+(비어 있으면 이미 split하고 내려왔음)
 
+# Major or Minor Improvement?
+Everything depends on the situation
+In Memory, not much of an improvement
+But if you are using Hard Disk?
+- On Hard Disk reading is slow
+- And the read time is the same up to some size 
+- So, following a pointer is much slower than moving to the next address on
+a hard disk
 
+2-3 트리의 작업은 크게 Internal Node Operation, Following Link, Make New Nodes and 
+Links로 나눌 수 있다. Disk에서의 특징은 다음과 같다:
 
+- Internal Node Operation은 Disk에서는 비교적 시간이 적게 소요된다.
+내부 노드 연산은 주로 키 비교와 탐색 작업을 의미한다. Disk에서는 내부 노드의 키 개수가 
+많아도 읽는 시간에는 큰 차이가 없다.
+- Following Link 작업은 Disk에서 시간이 많이 소요된다. 2-3-4 트리에서 Search를 수행하
+면서 split 작업을 함께 진행하는 것이 반복적인 split 작업을 최소화하여 효율적일 수 있다.
+각 노드의 키 개수가 많아질수록 해당 노드는 배열처럼 동작하며 Memory에서 시간 소요가 많
+이 발생할 수 있다. 그러나 Following Link 작업은 시간이 그리 길지 않기 때문에, 키 개수를 
+늘리는 것보다 Following Link를 줄이는 방법을 채택하는 것이 효율적이다.
+결론적으로, Disk에서는 내부 노드 연산은 비교적 빠르지만 Following Link 작업은 느리다. 
+따라서 효율적인 split 작업을 통해 최소한의 Following Link 작업을 수행하는 것이 중요하
+며, 키 개수를 늘리는 것은 Memory 접근에 따른 시간 소요를 고려하여 결정해야 한다.
+
+# 
 
 
