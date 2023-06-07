@@ -83,6 +83,7 @@ Links로 나눌 수 있다. Disk에서의 특징은 다음과 같다:
 따라서 효율적인 split 작업을 통해 최소한의 Following Link 작업을 수행하는 것이 중요하
 며, 키 개수를 늘리는 것은 Memory 접근에 따른 시간 소요를 고려하여 결정해야 한다.
 
-# 
+#  RedBlack Tree
+
 
 
