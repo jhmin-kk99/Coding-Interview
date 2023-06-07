@@ -14,7 +14,6 @@
 | __트리__  |BST(Binary Search Tree)와 Binary Tree는?|[__solution__](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/ds2.txt)||
 | __트리__  |AVL트리는?|[__solution__](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/ds3.txt)||
 | __트리__  |2-3, 2-3-4트리는?|[__solution__](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/ds4.txt)||
-| __트리__  |RedBlack트리는?|||
 | __트리__  |힙이란?|||
 | __트리__  |우선순위큐란? 동작원리는?|||
 | __트리__  |tree traversal의 3가지 방식은?|||
