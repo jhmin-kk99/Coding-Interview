@@ -1,0 +1,348 @@
+우선순위 큐란?
+
+# Priority Queue?
+It is a Queue, but Items in it have Priorities
+Assume the Simplest of Priority
+- The Item with the Highest Priority comes out first
+Possible Array Implementations
+- Sorted by Priority
+(Delete is fast, but what about Insert?)
+- UnSorted
+(Insert is fast but what about Delete?)
+
+# Binary Tree Implementation
+Use AVL, 2-3, 2-3-4, or Red-Black Tree(not BST)
+Find Minimum in the Trees
+- Just go down Left until you cannot
+- O(logN) 
+더 1등도 찾을 수 있고, k등도 찾을 수 있고, 많은 것을 할 수 있지만, 코드도 길고 복잡하며
+몇배 더 느리다. O notation 상으로는 트리도 O(logN)이라 좋지만 현실에서 쓰려고 할 때, 
+기능은 더 작지만 빠르기 때문에 우선순위큐가 쓰인다.
+
+# Heap Structure
+Heap Definition
+1. Complete Binary Tree
+- All Levels Completely filled except for the last level
+- Last Level filled from Left
+2. Parent has smaller Key than Children (assume smaller means higher)
+- No ORDER for Left and Right Children (large flexibility)
+Implications
+- Smallest at the Root
+- Key gets larger as you go down(in any direction)
+
+Full Binary Tree : Child가 없거나 두개이다.
+Perfect Binary Tree : 모든 레벨에 있는 가능한 노드가 다 있다.(모든 레벨이 꽉 차있어야 함)
+노드의 수가 2^n-1 만 가능
+Complete Binary Tree : 모든레벨이 꽉 차있음. 그러나 마지막 레벨은 안 차있어도 된다.(왼쪽부터
+노드가 생김)
+
+# Array Representation
+Rules
+- Root is at index 1 (index 0은 보통 안씀)
+- Left and Right Children of Node at index i are at 2i and 2i+1
+- Q: Where is the parent of Node at index i?
+  A :i/2
+
+# Heap Insert(Up-Heap)
+Algorithm
+1. Insert 연산에 의해 새로운 요소가 Heap에 추가되면, 해당 요소는 트리의 가장 마지막 노드에 위치한다. 
+이때, complete binary tree의 특성을 유지하기 위해 가장 마지막 노드의 다음 위치에 새로운 요소를 
+추가한다.
+2. 새로운 요소가 추가된 후, 해당 요소의 부모 노드와 비교하여 Heap의 특성을 만족하도록 조정한다. 
+Heap의 특성에 따라 부모 노드의 값은 항상 자식 노드의 값보다 크거나 작아야 한다.
+따라서, 새로운 요소와 부모 노드의 값을 비교하고 필요에 따라 두 노드의 위치를 교환한다. 
+이 과정을 반복하여 새로운 요소가 올바른 위치에 도달할 때까지 계속한다.
+최악의 경우에는 트리의 높이만큼 비교와 교환 작업을 수행해야한다. O(logN) 
+(한번 교환 작업이 일어나면 더이상 자식노드와 비교할 필요 없이 부모노드와 비교를 하면 됨)
+Accuracy
+1. 새로운 요소가 추가된 후에도 complete binary tree의 특성이 유지되는가?
+Heap은 complete binary tree의 형태를 유지해야 합니다. Heap Insert 연산은 
+새로운 요소를 가장 마지막 노드에 추가하고, 필요에 따라 부모 노드와 위치를 교환하므로 
+complete binary tree의 특성을 유지한다.  
+2. 새로운 요소와 부모 노드의 값 비교에 의해 Heap의 특성이 유지되는가?
+Heap의 특성에 따라 부모 노드의 값은 항상 자식 노드의 값보다 크거나 작아야 한다. 
+Heap Insert 연산은 새로운 요소와 부모 노드의 값을 비교하고 필요에 따라 위치를 교환한다.
+따라서, 새로운 요소가 추가된 후에도 Heap의 특성이 유지된다.
+
+# Heap Delete(Down-Heap)
+Algorithm
+1. 삭제할 노드를 찾는다. 일반적으로 Heap에서 삭제되는 노드는 루트 노드이다. 
+루트 노드를 삭제하여 Heap의 특성을 유지하려면, 루트 노드에 있는 요소를 삭제하고 그 자리에 힙의 
+가장 마지막 노드를 옮긴다.
+2. 삭제된 후에는 Heap의 특성을 유지하기 위해 Heapify 과정을 수행한다.
+Heapify는 삭제된 노드의 자리를 올바른 위치로 이동시키는 과정으로, 자식 노드(들)와 비교하여 
+자식 노드(들)보다 작은(또는 큰) 값을 가지는 위치를 찾아 노드를 이동시킨다. 
+이 과정은 Heap의 특성을 유지하면서 삭제된 노드의 위치를 올바르게 조정하는 역할을 한다.
+최악의 경우에는 트리의 높이만큼 비교와 교환 작업을 수행해야한다. O(logN)
+(한번 교환 작업이 일어나면 더이상 부모노드와 비교할 필요 없이 자식노드(들)와 비교를 하면 됨)
+Accuracy
+1. 삭제 후에도 complete binary tree의 특성이 유지되는가?
+Heap은 complete binary tree의 형태를 유지해야 한다. 
+Heap Delete 연산은 삭제할 노드를 루트 노드에 위치시키고, 힙의 가장 마지막 노드를 삭제된 노드의 
+자리로 옮김으로써 complete binary tree의 특성을 유지한다.
+2. 삭제된 후에도 Heap의 특성이 유지되는가?
+Heap의 특성에 따라 부모 노드의 값은 항상 자식 노드의 값보다 크거나 작아야 한다. 
+Heap Delete 연산은 Heapify 과정을 통해 삭제된 노드의 위치를 올바르게 조정하며, 
+자식 노드와 비교하여 자식 노드보다 작은(또는 큰) 값을 가지는 위치로 노드를 이동시킨다. 
+따라서, 삭제 후에도 Heap의 특성이 유지된다.
+
+# Shortest Path Problem
+Given a Directed or Undirected Graph Find the Shortest Path(Length) from a Source
+Node to all other Nodes
+
+# Dijkstra Algorithm (단일 시작점에서 최단 경로 구하기)
+기존 최단 경로를 알고 있는 노드를 대상으로 이 노드에 인접한 다른 노드에 대한 최단 경로를 점검한다.
+Idea
+s라는 시작노드에 Direct Node가 세개 있다고 가정한다.
+각 노드를 v1,v2,v3라고할 때, yv1을 s에서부터 노드 v1까지의 거리라고 한다.
+yv1 = 2, yv2 = 4, yv3 = 5 라고 주어졌을 때, s에서 v1으로의 Shortest Path가 yv1(=2)임을 보여라.
+->
+귀류법) s에서 v1으로의 Shortest Path가 yv1(=2)가 아니라고 하자. 그렇다면 s에서 v2 혹은 v3를 
+거쳐가는 Path가 Shortest Path가 되어야 한다. 그러나 이미 yv2 > 2이고, yv3 > 2 이므로 모순이다. 
+(yv1이 가장 작기 때문)
+따라서 s에서 v1으로의 Shortest Path는 yv1(=2)이다.
+(음수 간선이 있다면 현재 갈 수 있는 정점 중에서 가장 가까운 정점까지의 거리를 확정할 수 없음
+... 다익스트라의 논리가 성립될 수 없음)
+Maintain Red and Blue Sets (of Nodes)
+- Red set : Real Shortest Path is known
+- Blue set : Shortest Path using ONLY Red Nodes is known
+- Repeat : Move one Node in Blue set into Red set
+Initially
+- Red set contains only the Source Node
+- All other Nodes : If directly connected from the Source then the length is the
+length of the edge, infinite otherwise
+At each Round
+- Find the smallest (Shortest Path) Length among Blue Nodes
+- Color that node (v) Red
+- Use edges from v to UPDATE Nodes (w) directly connected from v
+- Update means taking minimum between already stored value vs. taking path from v to w
+
+# What does it have to do with Heap?
+At each Round
+- Find the smallest (Shortest Path) Length among Blue Nodes
+- Color that node (v) Red
+- Use edges from v to UPDATE Nodes (w) directly connected from v
+- Update means taking minimum between already stored value vs. taking path from v to w
+
+# Performance Comparison (V는 노드의 수, E는 간선의 수)
+Without Heap, finding Minimum takes O(E) time (연결된 모든 노드 순회)
+-> Dijkstra takes at least O(VE) time
+With Heap, finding Minimum takes O(logE) time 
+-> Dijkstra takes O(ElogE)time
+(우선순위 큐에 추가될 수 있는 원소의 수를 생각해보았을 때, 간선 1개당 최대 1개의 원소가
+추가될 수 있음)
+
+Priority queue로 중간값 구하기
+#include<iostream>
+#include<cstdio>
+using namespace std;
+
+class PQMin {
+public:
+    PQMin();
+    int Size();
+    int Top();
+    void Insert(int x);
+    void Delete();
+    int a[1000];
+    int n;
+};
+PQMin::PQMin()
+{
+    n = 0;
+}
+int PQMin:: Size() {
+    return n;
+}
+int PQMin::Top() {
+    return a[1];
+}
+void PQMin::Insert(int x) {
+    int i;
+    n++;
+    a[n] = x;
+    i = n; //지금 보고 있는 노드
+    while (i != 1) {
+        //parent는 i/2에 있음
+        if (a[i / 2] <= a[i])
+            break;
+        swap(a[i / 2], a[i]);
+        i = i / 2;
+    }
+}
+void PQMin::Delete() {
+    int i,j;
+    a[1] = a[n];
+    n--;
+    i = 1;
+    while (true) {
+        if (i * 2 > n)break; //왼쪽 child가 없음
+        if (i * 2 == n) //왼쪽 child만
+        {
+            if (a[i] <= a[i * 2]) break;
+            else {
+                swap(a[i], a[i * 2]);
+                i = i * 2;
+            }
+        }
+        else //양쪽 child 
+        {
+            if (a[i * 2] < a[i * 2 + 1]) j = i * 2;
+            else j = i * 2 + 1;
+            if (a[i] <= a[j]) break;
+            else {
+                swap(a[i], a[j]);
+                i = j;
+            }      
+        }
+    }
+}
+
+class PQMax {
+public:
+    PQMax();
+    int Size();
+    int Top();
+    void Insert(int x);
+    void Delete();
+    int a[1000];
+    int n;
+};
+PQMax::PQMax()
+{
+    n = 0;
+}
+int PQMax::Size() {
+    return n;
+}
+
+int PQMax::Top() {
+    return a[1];
+}
+
+void PQMax::Insert(int x) {
+    int i;
+    n++;
+    a[n] = x;
+    i = n; //지금 보고 있는 노드
+    while (i != 1) {
+        //parent는 i/2에 있음
+        if (a[i / 2] >= a[i])
+            break;
+        swap(a[i / 2], a[i]);
+        i = i / 2;
+    }
+}
+
+void PQMax::Delete() {
+    int i, j;
+    a[1] = a[n];
+    n--;
+    i = 1;
+    while (true) {
+        if (i * 2 > n)break; //왼쪽 child가 없음
+        if (i * 2 == n) //왼쪽 child만
+        {
+            if (a[i] >= a[i * 2]) break;
+            else {
+                swap(a[i], a[i * 2]);
+                i = i * 2;
+            }
+        }
+        else //양쪽 child 
+        {
+            if (a[i * 2] > a[i * 2 + 1]) j = i * 2;
+            else j = i * 2 + 1;
+            if (a[i] >= a[j]) break;
+            else {
+                swap(a[i], a[j]);
+                i = j;
+            }
+            
+        }
+    }
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+
+    char c;
+    int x, i, lcnt, rcnt, y;
+    PQMax Left;
+    PQMin Right;
+    lcnt = rcnt = 0;
+    while (true) {
+        cin >> c;
+        if (c == 'p') {
+            if (Left.Size() == 0)
+                cout << "No entry." << '\n';
+            else
+                cout << "Middle member = " << Left.Top() << '\n';
+
+        }
+        else if (c == 'i')
+        {
+            cin >> x;
+            if (lcnt == 0) {
+                Left.Insert(x);
+                lcnt = 1;
+                }
+            else if (lcnt == rcnt) {
+                if (Right.Top() >= x)
+                {
+                    Left.Insert(x);
+                }
+                else {
+                    y = Right.Top();
+                    Right.Delete();
+                    Left.Insert(y);
+                    Right.Insert(x);
+                }
+                lcnt++;
+            }
+            else // lcnt == rcnt + 1;
+            {
+                if (x >= Left.Top())  {
+               
+                    Right.Insert(x);
+                }
+                else {
+                 
+                    y = Left.Top();
+                    Left.Delete();
+                    Right.Insert(y);
+                    Left.Insert(x);
+                }
+                rcnt++;
+            }
+        }
+        else if (c == 'd')
+        {
+            if (Left.Size() == 0)
+                cout << "No entry to delete." << '\n';
+            else {
+                y = Left.Top(); Left.Delete();
+                if (lcnt == rcnt) {
+                    x = Right.Top();
+                    Right.Delete();
+                    Left.Insert(x);
+                    rcnt--;
+                }
+                else {
+                    lcnt--;
+                }
+                cout << "Middle member = " << y << ", has been deleted." << '\n';
+
+            }
+        }
+        else if (c == 'q') {
+            break;
+        }
+        else {
+            cout << "? ? ?" << '\n';
+        }
+    }
+    return 0;
+}
