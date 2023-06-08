@@ -128,9 +128,9 @@ At each Round
 Without Heap, finding Minimum takes O(E) time (연결된 모든 노드 순회)
 -> Dijkstra takes at least O(VE) time
 With Heap, finding Minimum takes O(logE) time 
--> Dijkstra takes O(ElogE)time
-(우선순위 큐에 추가될 수 있는 원소의 수를 생각해보았을 때, 간선 1개당 최대 1개의 원소가
-추가될 수 있음)
+-> Dijkstra takes O((V+E)logE)time
+O(VlogE) : 미방문 노드 중 현재까지의 최단거리를 가지는 노드 찾기
+O(ElogE) : 각 노드마다 이웃한 노드이 최단 거리를 갱신할 때
 
 Priority queue로 중간값 구하기
 #include<iostream>
