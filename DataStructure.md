@@ -15,7 +15,7 @@
 | __트리__  |AVL트리는?|[__solution__](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/ds3.txt)||
 | __트리__  |2-3, 2-3-4, RedBlack 트리는?|[__solution__](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/ds4.txt)||
 | __트리__  |우선순위큐란? 동작원리는?|[__solution__](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/ds5.txt)||
-| __트리__  |tree traversal의 3가지 방식은?|||
+| __트리__  |tree traversal과 Parsing은?|||
 | __그래프__  |그래프란?|||
 | __그래프__  |traversals 2가지는? (BFS, DFS)|||
 | __그래프__  |spanning트리란?|||
