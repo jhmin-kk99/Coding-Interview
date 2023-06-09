@@ -1,0 +1,12 @@
+Spanning Tree란? Union Find란?
+
+Spanning Tree(신장트리)
+신장트리는 그래프의 모든 노드 V를 포함하는 트리를 말한다. 여기서의 '신장(Spanning)'은
+모든 노드를 포함한다는 의미이다. 즉, 만약 노드가 4개인 그래프에 대해서 신장 트리를 만든다고
+한다면, 이 신장 트리는 반드시 4개의 노드를 가지고 있어야 한다.
+다만, 신장 트리는 트리의 일종이기 때문에 순환(Cycle)이 없어야 한다는 제약 사항이 있다.
+즉, 신장 트리는 기존 그래프가 가진 모든 노드를 순환 없이 서로 연결시킨 트리를 말한다.
+
+Application (Minimum Spanning Tree)
+Given a Graph, find Subset of Edges so that a Connectsed Graph results with Minimum
+Sum of Edge Costs
