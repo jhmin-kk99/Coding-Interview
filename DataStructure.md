@@ -18,10 +18,9 @@
 | __트리__  |tree traversal과 Parsing은?|[__solution__](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/ds6.txt)||
 | __그래프__  |그래프란?|||
 | __그래프__  |traversals 2가지는? (BFS, DFS)|||
-| __그래프__  |spanning트리란?|||
+| __그래프__  |spanning트리란? Union Find란?|[__solution__](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/ds7.txt)||
 | __그래프__  |인접 행렬, 인접 리스트를 이용한 구현|||
 | __그래프__  |트리와 그래프의 관계는?|||
-| __그래프__  |최단경로 구하는 방법은?|||
 | __정렬__  |선택 정렬은?|||
 | __정렬__  |삽입 정렬은?|||
 | __정렬__  |힙 정렬은?|||
