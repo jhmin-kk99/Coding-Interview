@@ -8,5 +8,285 @@ Spanning Tree(신장트리)
 즉, 신장 트리는 기존 그래프가 가진 모든 노드를 순환 없이 서로 연결시킨 트리를 말한다.
 
 Application (Minimum Spanning Tree)
-Given a Graph, find Subset of Edges so that a Connectsed Graph results with Minimum
-Sum of Edge Costs
+Given a Connected(연결된), Weighted Graph, find Subset of Edges so that a Connected Graph results with Minimum Sum of Edge Costs
+예를 들어, 전국의 모든 도시를 연결하는 인터넷망을 설계한다고 가정해보자. 각 도시 사이의
+거리 및 지리적 상황이 서로 다르므로 도시와 도시 사이의 인터넷 선로를 설치하는 비용에 차이가
+발생한다. 즉, 어떤 도시들 사이에는 산 혹은 강이 있어서 선로를 설치하는데 비용이 많이 드는 반면,
+어떤 도시들 사이는 단순 평지이기 때문에 비교적 저렴하게 선로를 설치할 수 있다고 가정해보자.
+이럴 때, 어떤 도시를 서로 연결하느냐에 따라 전체 구축 비용은 많은 차이가 날 수 있다. 
+최소 비용 신장트리는 가중 그래프를 기반으로 구해질 수 있다. 즉, 각 도시를 연결할 때 필요한
+비용이 간선의 가중치로 설정되었으며, 이러한 입력 값을 바탕으로 최선의 도시 연결 안을 산출
+해야 한다. 최소 비용 신장 트리는 가중 그래프의 신장 트리 중에서 가중치의 합이 최소인 신장
+트리를 말한다. 이러한 최소 신장 트리를 구하는 방법은 여러 가지가 있는데, 가장 대표적인 알고리즘은
+Prim algorithm 과 Kruskal algorithm이다.
+
+# Kruskal Algorithm
+Keep adding Edges
+- From smaller weights(sorting)
+- As long as no Cycle results
+- Until N-1 Edges are added
+
+# Why is Kruskal Correct?
+Adding Smallest Edge "that does not make a Cycle"
+If it makes a Cycle, then you cannot add the Edge
+If you insist on adding the Edge, then you have to remove an Edge with smaller Cost
+-> Does not make Sense (작은 것부터 Edge를 추가하기 때문에)
+Not a complete Proof but that's the idea
+
+# Implementation Considerations
+You have to sort Edges by Weight?
+How to Represent an Edge (for sorting)?
+- You can just use triple (a,b,w) where, a, b are Nodes and w is the Weight of the Edge
+When considering an Edge (a,b,w), you have to know if a and b belong to a "connected" group
+You have to be able to answer the question efficiently
+
+# We already have a Tool
+DFS is slow
+- DFS takes O(N) time
+- The whole Kruskal Algorithm will take O(MN) time (M : Edge 개수)
+- Can we do faster?
+- Can we answer this Question Faster?
+For an Edge (a,b,w), does a and b belong to a "connected" group
+
+# Union/Find or Disjoint Set
+N items
+Initially N groups with 1 item each
+Two Operations
+- Union(a,b) : Join 2 groups (the group a belongs to and the group b belongs to) into one
+- Find(a) : Return the ID(Root of each Tree) of the group a belongs to
+(Running Find(a) and Find(b) will asnwer if a and b belong to the same group)
+
+# The Structure
+Each item is a Node
+Initially there are N Trees with one Node each
+After some Union operations
+- Each Tree is one group
+- The Root of each Tree is the ID of the group
+- No other restrictions
+A Node stores only the pointer to the Parent!(Child pointer는 없음, Root만 찾으면 되기 때문에)
+
+# Performance of Union/Find
+Union Requires Find
+Find takes O(N) time in the worst case
+So what is good about this?
+You can try to keep the Trees in "good" form (같은 Union의 노드들이 루트의 바로 붙어있는 자식노
+드들일 때, 0 or 1 time에 Find 가능)
+
+# Heuristics 
+Heuristic means : Idea works but the reason is not very clear
+Here Heuristics have proofs
+Which should be the Root?
+- When doing Union
+- By # of nodes
+- By Height
+- Both give you O(logN)(= Find() time = Tree Height)
+
+# Path Compression (경로 압축)
+연산 수행 중에 경로를 따라 이동한 노드를 직접 루트 노드에 연결하여 트리의 높이를 
+줄이는 기법. 경로 압축을 적용하면 연산의 성능이 향상되어 더욱 효율적인 Union-Find 자료구조를 구현가능하다.
+
+# Valiant's Proofs
+First Proof
+- One Operation takes O(logN) amortized Time (한 곳에서 긴 시간이 걸리면 다른 곳에서는
+짧은 시간이 걸림)
+Amortized Time means average time in the worst case
+Second Proof
+- One Operation takes O(log*N) amortized Time
+log*N means how many "log"s can you apply to N until it becomes 1
+- log*N = k means N= 2^2^2^...^2 <- k-1 times
+Third Proof
+- One Operation takes O(alpha(N)) amortized Time
+Ackermann Function
+- A(0,n) = n + 1
+- A(m+1,0) = A(m,1)
+- A(m+1,n+1) = A(m,A(m+1,n))
+Inverse Ackermann Function
+- Inverse of f(), where f(N) = A(N,N)
+
+//union find
+#include <iostream>
+#include <cstdio>
+using namespace std;
+
+int n;
+int A[1000];
+
+int Find(int a){
+	int r, p, q;
+	p = a;
+	while (A[p] != 0) {
+		p = A[p];
+	}
+	r = p; //root노드
+	p = a;
+	while (A[p] != 0) {
+		q = p;
+		p = A[p];
+		A[q] = r;
+	}
+	return p;
+}
+
+void Union(int a, int b) {
+	int p, q;
+	p = Find(a); q = Find(b);
+	if(p!=q)
+		A[q] = p;
+	
+	return;
+}
+
+void Print() {
+	int i;
+	for (i = 1; i <= n; i++)
+		printf("%4d", A[i]);
+	cout << '\n';
+	return;
+}
+
+int main() {
+	char c;
+	int a, b;
+	cout << "Size? ";
+	cin >> n;
+	while (true) {
+		Print();
+		cin >> c;
+		if (c == 'u') {
+			cin >> a >> b;
+			Union(a, b);
+		}
+		else if (c == 'f') {
+			cin >> a;
+			cout << a << " belongs to group " << Find(a) << '\n';
+		}
+		else if (c == 'q') {
+			break;
+		}
+		else {
+			cout << "???" << '\n';
+			
+		}
+	}
+	return 0;
+}
+
+// MST
+#include <iostream>
+#include <cstdio>
+#include<algorithm>
+#include<vector>
+
+using namespace std;
+
+class edge {
+public:
+	int a, b, w;
+};
+
+bool cmp(edge e1, edge e2) {
+	return e1.w < e2.w;
+}
+edge ED[1000];
+int Used[1000];
+
+int n, m;
+int A[1000];
+
+
+
+int Find(int a){
+	int r, p, q;
+	p = a;
+	while (A[p] != 0) {
+		p = A[p];
+	}
+	r = p; //root노드
+	p = a;
+	while (A[p] != 0) {
+		q = p;
+		p = A[p];
+		A[q] = r;
+	}
+	return p;
+}
+
+void Union(int a, int b) {
+	int p, q;
+	p = Find(a); q = Find(b);
+	if(p!=q)
+		A[q] = p;
+	
+	return;
+}
+vector <pair<int, int>> AD[1000];
+
+int Visited[1000];
+
+void Print(int nd, int w, int d, int LR)
+{
+	int i, first;
+	Visited[nd] = 1;
+	if (LR == 1)
+	{
+		for (i = 0; i < d; i++)
+		{
+			cout << "        ";
+		}
+	}
+	printf("[%3d, %d]", w, nd);
+	first = 1;
+	for (i = 0; i < AD[nd].size(); i++) {
+		if (Visited[AD[nd][i].first] == 0) {
+			if (first == 1) {
+				Print(AD[nd][i].first, AD[nd][i].second, d + 1, 0);
+			}
+			else {
+				Print(AD[nd][i].first, AD[nd][i].second, d + 1, 1);
+			}
+			first = 0;
+		}
+	}
+	if (first == 1) {
+		cout << '\n';
+	}
+}
+
+int main() {
+
+	int i, j, a, b, w;
+	
+	cin >> n >> m;
+	for (i = 1; i <= m; i++) {
+		cin >> a >> b >> w;
+		edge E;
+		E.a = a; E.b = b; E.w = w;
+		ED[i] = E;
+	}
+	sort(ED + 1, ED + m + 1, cmp);
+	for (i = 1; i <= m; i++) {
+		if (Find(ED[i].a) != Find(ED[i].b)) {
+			cout << "Using Edge " << i << "  between " << ED[i].a << " and " << ED[i].b << " with weight " << ED[i].w << '\n';
+			Used[i] = 1;
+			Union(ED[i].a, ED[i].b);
+		}
+	}
+	int sum;
+	sum = 0;
+	for (i = 1; i <= m; i++) {
+		if (Used[i] == 1) {
+			sum += ED[i].w;
+		}
+	}
+	cout << "Weight Sum = " << sum << '\n';
+	for (i = 1; i <= m; i++) {
+		if (Used[i]) {
+			AD[ED[i].a].push_back(make_pair(ED[i].b, ED[i].w));
+			AD[ED[i].b].push_back(make_pair(ED[i].a, ED[i].w));
+		}
+		
+	}
+	Print(1,0, 0, 0);
+	return 0;
+}
+
