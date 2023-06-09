@@ -1,2 +1,127 @@
 그래프란?
 
+# Agenda - Graphs
+Graph basics and definitions
+- Vertices/nodes, edges, adjacency, incidence
+- Degree, in-degree, out-degree
+- Subgraphs, unions, isomorphism
+- Adjacency matrics
+Types of Graphs
+Trees
+Undirected graphs
+- Simple graphs, Multi graphs, Pseudographs
+Digraphs, Directed multigraph
+Bipartite
+Complete graphs, cycles, wheels, cubes, complete bipartite
+
+# Uses of Graph Theory in CS
+Car navigation system
+Efficient databases
+Build a bot to retrieve info off WWW
+Representing computational models Many other applications
+
+# Graphs - Intuitive Notion
+A graph is a bunch of vertices (or nodes) represented by circles
+which are connected by edges, represented by line segments
+Mathematically, graphs are binary-relations on their vertex set
+(except for multigraphs)
+In Data Structures one often starts with trees and generalizes to graphs.
+In this course, opposite approach: We start with graphs and restrict to get trees
+
+# Undirected graph
+1. Simple Graphs
+Different purposes require different types of graphs
+EG : Suppose a local computer network
+- Is bidirectional (undirected)
+- Has no loops (no "self-communication")
+- Has unique connections between computers
+Sensible to represent as follows :
+Vertices are labeled to associate with particular computers
+* Each edge can be viewed as the set of its two endpoints
+
+# DEF : A simple graph G = (V,E) consists of a non-empty finite set V of vertices(or nodes)
+and a set E (possibly empty) of edges where each edge is a subset of V with cardinality(원소 개
+수) 2 (an unordered pair).
+Q : For a set V with n elements, how many possible edges there?
+A : nC2
+Q : How many possible graphs are there for the same set of vertices V? (|V| = n)
+|V| = cardinality V 
+G1 = (V1,E1) , G2 = (V2, E2) 
+G1 = G2 <=> (V1 = V2) and (E1 = E2)
+A : 2^(nC2) 
+
+2. Multigraphs
+Simple graphs have their nodes connected by only one link type, such as road or rail links. A 
+multigraph can contain more than one link type between the same two nodes. In the above 
+example, the multigraph is a combination of the two simple graphs.
+
+If computers are connected via internet instead of directly, there may be several routes
+to choose from for each connection. Depending on traffic, one route could be better than
+another. Makes sense to allow multiple edges, but still no self-loops :
+Edge-labels distinguish between edges sharing same endpoints.
+Labeling can be thought of as function :
+e1 -> {1,2}, e2 -> {1,2}, e3 -> {1,3}, e4 -> {2,3}, e5 -> {2,3}, e6 -> {1,2}
+
+# DEF : A multigraph G = (V,E,f) consists of a non-empty set V of vertices(or nodes),
+a set E (possibly empty) of edges and a function f with domain E and codomain the set of
+unordered pairs in V.
+
+3. Pseudographs
+If self-loops are allowed we get a pseudograph :
+Now edges may be associated with a single vertex, when the edge is a loop
+e1 -> {1,2}, e2 -> {1,2}, e3 -> {1,3}, e4 -> {2,3}, e5 -> {2}, e6 -> {2},
+e7 -> {4}
+
+# DEF : A pseudograph G = (V,E,f) consists of a non-empty set V of vertices (or nodes),
+a set E (possibly empty) of edges and a function f with domain E and codomain the set of 
+unordered pairs and singletons in V.
+
+# Undirected Graphs Terminology
+Vertices are adjacent if they are the endpoints of the same edge.
+(e1 -> {v1, v2}이면 v1, v2는 e1의 endpoints라고 한다)
+(Vertex와 Vertex와의 관계)
+a vertex is incident with an edge (and the edge is incident with the vertex) if it is the
+endpoint of the edge.
+(Vertex와 Edge와의 관계)
+
+# Digraphs
+Q : What type of pair should each edge be (multiple edges not allowed)?
+A : Each edge is directed so an ordered pair (or tuple) rather than unordered pair.
+Thus the set of edges E is just the represented relation on V.
+
+# DEF : A directed graph (or digraph) 
+G = (V,E) consists of a non-empty finite set V of vertices(or nodes) and a set E of edges
+(subsets of V x V)
+The edge (a,b) is also denoted by a->b and a is called source of the edge while b is called
+the target of the edge.
+Q : For a set V with n elements, how many possible digraphs are there?
+A : The same as the number of relations on V, which is the number of subsets of 
+V x V so 2^(n*n)
+
+# Direct Multigraphs
+If also want to allow multiple edges in a digraph, get a directed multigraph(or multi-digraph)
+Q : How to use sets and functions to deal with multiple directed edges, loops?
+A : Have function with domain the edge set and codomain V x V
+e1 -> {1,2}, e2 -> {1,2}, e3 -> {2,2}, e4 -> {2,3}, e5 -> {2,3}, e6 -> {3.3},
+e7 -> {3,3}
+
+# Degree (edge 개수)
+The degree of a vertex counts the number of edges that seem to be sticking out
+Q : How to define this formally?
+A : Add 1 for every regular edge incident with vertex and 2 for every loop.
+
+# Oriented Degree when Edges Directed
+The in-degree of a vertex (deg-) counts the number of edges that stick in to the vertex.
+The out-degree(deg+) counts the number sticking out.
+
+# Handshaking Theorem
+There are two ways to count the number of edges in the graph :
+1. Just count the set of edges
+2. Count seeming edges vertex by vertex and divide by 2 because of double-counted edges 
+
+
+
+
+
+
+
