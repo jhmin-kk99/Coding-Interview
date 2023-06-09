@@ -1,0 +1,76 @@
+Tree traversing 과 Parsing은?
+
+# Traversal
+Traversal means to "visit" all Nodes in "some" order
+"Visit" does not mean being at Node
+"Visit" means doing "something" at a Node
+Well... , it DFS again, in fact
+
+# Code could be simpler than DFS
+Because it is a Tree now
+
+Traverse(Node *D)
+{
+  if(D==NULL)return;
+  Visit(D); <- Preorder Traversal (root, left, right)
+  Traverse(D->Left);
+  Visit(D); <- Inorder Traversal (left, root, right)
+  Traverse(D->Right);
+  Visit(D); <- Postorder Traversal (left, right, root)
+}
+
+# An interesting problem
+Can 2 sequences be generated from Preorder and Inorder Traversals
+of a same Binary Tree? (Not Binary Search Tree)
+4, 1, 2, 3, 8, 6, 5, 9, 7 (Preorder)
+3, 2, 8, 1, 6, 4, 9, 5, 7 (Inorder)
+
+Preorder에서 4는 root이고, 이때 Inorder에서 4를 찾음.
+Inorder에서  4의 왼쪽에 있는 수들은 left subtree를 이루고, 4의 오른쪽에 있는 수들은 right subtree를
+이룬다. Preorder에서 3,2,8,1,6 / 5,9,7 을 확인한다. 재귀를 이용한다. 
+두 sequence를 통해서 Tree를 만들 수 있다면, 그 Tree는 유일하다. 
+
+* + / 6 3 5 - 6 4 : Prefix Notation (연산자가 앞에 있음, 괄호가 없음)
+( 6/ 3 + 5 ) * ( 6 - 4 ) : Infix Notation
+6 3 / 5 + 6 4 - * : Postfix Notation (괄호가 없음)
+
+# Parsing (for Code Generation)
+Parsing is very important in Compilers
+It is the process of building the Tree representing the formula
+
+# Example Code Generation
+( ( A / B + C ) * ( A - D ) + C )
+->
+T1 = A / B
+T2 = T1 + C
+T3 = A - D
+T4 = T2 * T3
+T5 = T4 + C
+
+# The Parsing Algorithm (No Parentheses)
+Disclaimer : No complete proof will be given!
+Assumptions
+- Operators have priority
+- Operator (is same priority) on the left has higher priority
+While reading formula from start to end
+If operand then make a node and push to 2nd stack
+If operator then compare priority with top of 1st stack
+- Case input is higher : push to 1st stack
+- Case stack top is higher:
+pop 2 from 2nd stack
+make a node with stack top operator and 
+2 popped nodes (as children)
+push operator node to 2nd stack
+REPEAT comparison
+- Case $ and $ meet : finish ($ : 시작과 끝 표시)
+
+# What about Parenthesis
+Parenthesis have 2 priorities
+- Opening Parenthesis has highest priority when on Input
+- Opening Parenthesis has lowest priority when on Stack
+- Closing Parenthesis has lowest priority and never goes into Stack
+The Intuitions (think about $)
+... + (...) ... : + cannot be done before inside of parenthesis is finished
+-> from outside parenthesis seems to be high
+... (... + ...) ... : parenthesis cannot be finished before + is done 
+-> from inside parenthesis seems to be low
