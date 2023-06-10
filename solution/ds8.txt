@@ -179,7 +179,22 @@ The n-cube Qn is defined recursively. Q0 is just a vertex. Qn+1 is gotten by tak
 (복사본을 그대로 만들면서 엣지를 추가해줌)
 Qk에서 임의의 v1, v2에 대하여 v1에서 v2까지 최대 logk번이면 도달가능하다.
 
+# Bipartite Graphs
+Bipartite Graph (이분 그래프)는 그래프의 정점들을 두 개의 상호 배타적인 집합으로 분할할 수 있는 그래프이다.
+이 그래프에서 각 간선은 한 집합의 정점과 다른 집합의 정점을 연결합니다. 즉, 그래프를 두 개의 그룹으로 나누어서 
+각 그룹 내에서는 간선이 존재하지 않는 형태입니다.
 
+형식적으로, 그래프 G = (V, E)가 이분 그래프라면, 그래프의 정점 집합 V를 V1과 V2라는 두 개의 상호 배타적인 부
+분집합으로 나눌 수 있어야 한다. 여기서 그래프의 간선 E는 V1에 속하는 정점과 V2에 속하는 정점을 연결하는 형
+태를 가져야 한다. 이렇게 정점을 두 개의 그룹으로 나누는 것을 그래프의 이분화(bipartition)라고 한다.
 
+이분 그래프는 다양한 응용 분야에서 활용될 수 있다. 예를 들어 학생과 강의, 직원과 프로젝트, 웹 페이지와 하이퍼
+링크 등 서로 다른 유형의 개체나 개념들 간의 관계를 모델링하는 데 사용될 수 있다. 또한, 이분 그래프는 이분 
+매칭 문제나 최대 유량 문제와 같은 일부 문제를 효율적으로 해결하는 알고리즘을 가지고 있다.
 
+A simple graph is bipartite if V can be partitioned into V = V1 U V2 
+such that any two adjacent vertices are in different parts of the partition. 
+Another way of expressing the same idea is 
+bichromatic. vertices can be colored using two colors so that no two vertices of the same
+color are adjacent
 
