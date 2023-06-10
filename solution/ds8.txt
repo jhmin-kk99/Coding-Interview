@@ -374,5 +374,6 @@ Semi-connected : can get from a to b OR from b to a in digraph
 3. Should we insist that can get from a to b and that can get from b to a?
 Strongly connected : can get from a to b AND from b to a in the digraph
 
-DEF : A graph is strongly(resp. semi, resp. weakly) connected if every pair of vertices connected in the same sense.
+DEF : A graph is strongly(resp. semi, resp. weakly) connected if every pair of vertices 
+connected in the same sense.
 
