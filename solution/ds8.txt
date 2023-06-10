@@ -181,8 +181,8 @@ Qk에서 임의의 v1, v2에 대하여 v1에서 v2까지 최대 logk번이면 �
 
 # Bipartite Graphs
 Bipartite Graph (이분 그래프)는 그래프의 정점들을 두 개의 상호 배타적인 집합으로 분할할 수 있는 그래프이다.
-이 그래프에서 각 간선은 한 집합의 정점과 다른 집합의 정점을 연결합니다. 즉, 그래프를 두 개의 그룹으로 나누어서 
-각 그룹 내에서는 간선이 존재하지 않는 형태입니다.
+이 그래프에서 각 간선은 한 집합의 정점과 다른 집합의 정점을 연결한다. 즉, 그래프를 두 개의 그룹으로 나누어서 
+각 그룹 내에서는 간선이 존재하지 않는 형태이다.
 
 형식적으로, 그래프 G = (V, E)가 이분 그래프라면, 그래프의 정점 집합 V를 V1과 V2라는 두 개의 상호 배타적인 부
 분집합으로 나눌 수 있어야 한다. 여기서 그래프의 간선 E는 V1에 속하는 정점과 V2에 속하는 정점을 연결하는 형
@@ -195,6 +195,184 @@ Bipartite Graph (이분 그래프)는 그래프의 정점들을 두 개의 상�
 A simple graph is bipartite if V can be partitioned into V = V1 U V2 
 such that any two adjacent vertices are in different parts of the partition. 
 Another way of expressing the same idea is 
-bichromatic. vertices can be colored using two colors so that no two vertices of the same
+bichromatic : vertices can be colored using two colors so that no two vertices of the same
 color are adjacent
+Q : For which n is Cn bipartite?
+각 간선은 한 집합의 정점과 다른 집합의 정점을 연결한다. 즉, 그래프를 두 개의 그룹으로 나누어서 
+각 그룹 내에서는 간선이 존재하지 않는 형태를 가질 수 있다면 bipartite이다.
+이때, Cn은 cycle로 bipartite가 되기 위해서는 각 정점이 N R N R ... 형태로 이루어져야한다.
+(N과 R은 서로 다른 집합)
+정점의 개수가 홀수개가 되면 같은 집합과의 엣지가 생겨 bipartite가 아니다. (짝수여야 bipartite)
+
+5. Complete Bipartite - Km,n
+When all possible edges exist in a simple bipartite graph with m red vertices and n green vertices,
+the graph is called complete bipartite and the notation Km,n is used.
+
+평면 상에 그래프를 그렸을 때, 모든 에지가 서로 교차하지 않도록 한번이라도 그릴 수 
+있다면 평면그래프(Planer graph)이다.
+
+# Kuratowski's and Wagner's theorems
+K5, K3,3은 평면 그래프가 아니다. 또한, 주어진 그래프가 평면 그래프가 아니라면, 해당 그래프는 
+minor로서 K5나 K3,3을 가지고 있다.(k5와 k3,3과 isomorphic한 그래프를 가지고 있다는 의미(후술함))
+여기서 minor는 주어진 그래프에서 엣지를 제거하거나 정점을 삭제하거나 임의의 엣지를 잘라내는 등의 
+연산을 통해 얻을 수 있는 그래프를 말한다.  
+
+# Subgraphs
+Notice that the 2-cube occurs inside the 3-cube.
+In other words, Q2 is a subgraph of Q3 :
+DEF : Let G = (V,E) and H = (W,F) be graphs.
+H is said to be a subgraph of G, if W is a subset of V and F is a subset of E
+G = ({1,2,3} , {(1,2), (1,3), (2,3)}) H = ({1,2}, {(2,3)})
+이때 W 는 V의 부분집합이고, F도 E의 부분집합이지만, H는 G의 subgraph가 아니다.
+H가 graph가 아니기 때문.
+Q : How many Q2 subgraphs does Q3 have?
+A : Each face of Q3 is a Q2 subgraph so the answer is 6, as this is the number of faces
+on a 3-cube (사실 subgraph의 DEF에서는 강한 개념의 "같다"를 사용한다(노드번호도 일치해야한다)
+이 질문에 대한 답에서는 약한 개념의 "같다"를 사용한다(노드번호는 바꿀 수 있다)... technical한 
+detail)(Q2와 Isomorphic한 subgraph를 의미(후술함))
+
+# Unions
+In previous example can actually reconstruct the 3-cube from its 6 2-cube faces :
+If we assign the 2-cube faces (aka Squares) the names S1,S2,S3,S4,S5,S6 then Q3 is the union
+of its faces : Q3 = S1 U S2 U S3 U S4 U S5 U S6 (각 그래프들은 서로 isomorphic하다(후술함))
+(노드번호를 무시할 수 없음 , S1, S2, ... , S6은 모두 Q2이지만 서로 다른 그래프)
+DEF : Leg G1 = (V1,E1) and G2 = (V2,E2) be two simple graphs (and V1, V2 may or may not
+be disjoint). The union of G1, G2 is formed by taking the union of the vertices and edges.
+I.E : G1 U G2 = (V1 U V2 , E1 U E2).
+A similar definitions can be created for unions of digraphs, multigraphs, pseudographs, etc.
+
+# Adjacency Matrix
+Since digraphs are relations on their vertex sets, can adopt the concept to represent 
+digraphs. In the context of graphs, we call the representation an adjacency matrix :
+For a digraph G = (V,E) define matrix AG by :
+1. Rows, Columns - one for each vertex in V
+2. Value at ith row and jth colume is 
+- 1 if ith vertex connects to jth vertex (i->j)
+- 0 otherwise
+Matrix
+1 1 1 1 
+0 1 1 1
+0 0 1 1
+0 0 0 1
+Can easily generalize to directed multigraphs by putting in the number of edges between
+verices, istead of only allowing 0 and 1:
+For a directed multigraph G = (V,E) define the matrix AG by :
+1. Rows, Columns - one for each vertex in V
+2. Value at ith row and jth column is 
+- The number of edges with source the ith vertex and target the jth vertex
+Matrix
+0 3 0 1
+0 1 2 0
+0 1 2 0
+0 0 0 0
+(다만 , weight가 edge에 추가가 된다면, 이렇게 쓸 수 없음, 위와 같은 방식은 edge의 개수만을
+고려한 방식)
+Undirected graphs can be viewed as directed graphs by turning each undirected edge into
+two oppositely oriented directed edges, except when the edge is a self-loop in which case
+only 1 directed edge is introduced.
+(when the edge is a self-loop, 똑같이 두개의
+edge를 만들어줄 수도 있음 ... directed graph의 degree값이 undirected graph의 degree의 값의 정확히 2배로 만들어주기 위해서)
+Matrix
+0 2 1 0
+2 2 1 0
+1 1 0 0
+0 0 0 1
+Notice that answer is symmetric (무방향 그래프)
+For an undirected graph G = (V,E) define the matrix AG by :
+Rows, Colums - one for each element of V
+Value at ith row and jth column is the number of edges incident with vertices i and j.
+This is equivalent to converting first to a directed graph as above. Or by allowing
+undirected edges to take us from i to j can simply use definition for directed graphs.
+
+# Graph Isomorphism
+Various mathematical notions come with their own concept of equivalence, as opposed to 
+equality.
+두 그래프가 주어졌다고 하자. 
+C4 , K2,2 
+Intuitively, two graphs are isomorphic if can bend, stretch and reposition vertices of the
+first graph, until the second graph is formed. Etymologically, isomorphic means "same shape".
+즉, 노드 번호를 "잘" 붙이면, 같은 그래프를 만들 수 있다. 
+노드 번호를 "잘" 붙여서 같은 그래프를 만들 수 있다면, 두 그래프는 isomorphic하다고 한다.
+DEF : Suppose G1 = (V1,E1) and G2 = (V2,E2) are pseudographs. Let f : V1->V2 be a function
+such that :
+1. f is bijective(일대일 대응)
+2. for all vertices u,v in V1, the number of edges between u and v in G1, is the same as
+the number of edges between f(u) and f(v) in G2.
+Then f is called an isomorphism and G1 is said to be isomorphic to G2.
+DEF : Suppose G1 = (V1,E1) and G2 = (V2,E2) are directed multigraphs. Let f : V1->V2 be a 
+function such that :
+1. f is bijective(일대일 대응)
+2. for all vertices u,v in V1, the number of edges from u to v in G1, is the same as
+the number of edges between f(u) and f(v) in G2.
+Then f is called an isomorphism and G1 is said to be isomorphic to G2.
+Note : Only difference between two definitions is "from" in no.2(was "between")
+
+# Properties of Isomorphisms
+Since graphs are completely defined by their vertex sets and the number of edges between
+each pair, isomorphic graphs must have the same intrinsi properties. I.e. isomorphic graphs
+have the same ...
+... number of vertices and edges
+... degrees at corresponding vertices
+... types of possible subgraphs
+... any other property defined in terms of the basic graph theoretic building blocks!
+
+Show that W6 is not bipartite.
+Bipartite graph의 subgraph도 bipartite이다.
+bipartite가 아니라는 것을 보이려면, subgraph가 bipartite가 아니라는 것이 있으면 된다.
+w6의 subgraph에는 k3가 있고, k3는 bipartite가 아니다.
+
+# Paths
+A path in a graph is a continuous way of getting from one vertex to another by using a 
+sequence of edges.
+EG : could get from 1 to 3 continuously as follows :
+1-e1->2-e1->1-e3->3-e4->2->e6->2-e5->2-e4->3
+(Undirected graph에서는 노드와 엣지를 함께 표현 해 주어야 모호하지 않음)
+A simple path contains no duplicate edges (though duplicate vertices are allowed).
+A cycle (or circuit) is a path which starts and ends at the same vertex.
+Note : Simple paths need not be in simple graphs. E.g., may contain loops.
+(Directed graph에서는 엣지의 sequence만으로 path를 표현 가능함)
+
+Q. Consider digraph adjacency matrix:
+1 0 1 0
+0 1 0 1
+1 1 0 0
+0 1 0 0
+1. Find a path from 1 to 4.
+1->3->2->4(DFS를 이용) (o)
+2. Is there a path from 4 to 1?
+4->2 (DFS를 이용) (x)
+
+# Connectivity
+DEF : Let G be a pseudograph. Let u and v be vertices. u and v are connected to each other
+if there is a path in G which starts at u and ends at v. G is said to be connected if all
+vertices are connected to each other.
+Note : Any vertex is automatically connected to itself via the empty path.
+Note : A suitable definition for directed graphs will follow later.
+
+Q. Write a little program that can find 3 letter words which are not connected to each
+other.
+모든 단어를 다 노드로 만든 다음, 모든 단어 쌍에 대해서 엣지 유무를 판단하여 그래프를 만들 수 있
+음. 이후 connected components를 이용하여 connected를 판단한다.
+(two words are adjacent if can get one word from the other by changin a single letter)
+
+# Connected components
+DEF : A connected component(or just component) in a graph G is a set of vertices such that
+all vertices in the set are connected to each other and every possible connected vertex is
+included(maximal).
+# N-Connectivity
+DEF : A connected simple graph with 3 or more vertices is 2-connected if it remains connected
+when any vertex is removed. When the graph is not 2-connected, we call the disconnecting
+vertex a cut vertex.
+# Connectivity in Directed Graphs
+In directed graphs may be able to find a path from a to b but not from b to a.
+However, Connectivity was a symmetric concept for undirected graphs. So how to define directed
+Connectivity is non-obvious :
+1. Should we ignore directions?
+Weakly connected : can get from a to b is underlying undirected graph
+2. Should we insist that can get from a to b in actual digraph?
+Semi-connected : can get from a to b OR from b to a in digraph
+3. Should we insist that can get from a to b and that can get from b to a?
+Strongly connected : can get from a to b AND from b to a in the digraph
+
+DEF : A graph is strongly(resp. semi, resp. weakly) connected if every pair of vertices connected in the same sense.
 
