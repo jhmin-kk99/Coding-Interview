@@ -377,3 +377,4 @@ Strongly connected : can get from a to b AND from b to a in the digraph
 DEF : A graph is strongly(resp. semi, resp. weakly) connected if every pair of vertices 
 connected in the same sense.
 
+25:00부터~
