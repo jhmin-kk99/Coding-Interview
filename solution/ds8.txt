@@ -376,5 +376,26 @@ Strongly connected : can get from a to b AND from b to a in the digraph
 
 DEF : A graph is strongly(resp. semi, resp. weakly) connected if every pair of vertices 
 connected in the same sense.
-
-25:00부터~
+# Time allowing
+Matrix multiplication and counting the number of paths in a graph.
+ex) Google - PageRank
+matrix가 다음으로 주어졌을 때,
+0 1 0
+1 0 0
+1 1 0  
+수학적귀납법
+길이 1인 path(성립)
+0 1 0 
+1 0 0
+1 1 0
+길이 k인 path가 다음과 같다고 하자.
+a b c
+d e f
+g h i 
+이때,
+(A)      (B)
+a b c    0 1 0
+d e f  * 1 0 0  
+g h i    1 1 0
+행렬곱을 하여 나온 행렬 C를 보았을 때,
+C(i,j)는 sigma(A(i,k) * B(k,j))와 같고, 이는 i->j의 길이가 k+1인 path의 개수와 같다.
