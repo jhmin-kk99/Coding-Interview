@@ -399,7 +399,3 @@ d e f  * 1 0 0
 g h i    1 1 0
 행렬곱을 하여 나온 행렬 C를 보았을 때,
 C(i,j)는 sigma(A(i,k) * B(k,j))와 같고, 이는 i->j의 길이가 k+1인 path의 개수와 같다.
-
-# Bipartite Graph Check
-BFS,DFS를 했을 때, 전진한 것들만 골라내면 Tree가 만들어진다.
-
