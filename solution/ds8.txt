@@ -232,11 +232,11 @@ on a 3-cube (사실 subgraph의 DEF에서는 강한 개념의 "같다"를 사용
 detail)(Q2와 Isomorphic한 subgraph를 의미(후술함))
 
 # Unions
-In previous example can actually reconstruct the 3-cube from its 6 2-cube faces :
+We can actually reconstruct the 3-cube from its 6 2-cube faces :
 If we assign the 2-cube faces (aka Squares) the names S1,S2,S3,S4,S5,S6 then Q3 is the union
 of its faces : Q3 = S1 U S2 U S3 U S4 U S5 U S6 (각 그래프들은 서로 isomorphic하다(후술함))
 (노드번호를 무시할 수 없음 , S1, S2, ... , S6은 모두 Q2이지만 서로 다른 그래프)
-DEF : Leg G1 = (V1,E1) and G2 = (V2,E2) be two simple graphs (and V1, V2 may or may not
+DEF : Let G1 = (V1,E1) and G2 = (V2,E2) be two simple graphs (and V1, V2 may or may not
 be disjoint). The union of G1, G2 is formed by taking the union of the vertices and edges.
 I.E : G1 U G2 = (V1 U V2 , E1 U E2).
 A similar definitions can be created for unions of digraphs, multigraphs, pseudographs, etc.
@@ -255,7 +255,7 @@ Matrix
 0 0 1 1
 0 0 0 1
 Can easily generalize to directed multigraphs by putting in the number of edges between
-verices, istead of only allowing 0 and 1:
+verices, instead of only allowing 0 and 1:
 For a directed multigraph G = (V,E) define the matrix AG by :
 1. Rows, Columns - one for each vertex in V
 2. Value at ith row and jth column is 
