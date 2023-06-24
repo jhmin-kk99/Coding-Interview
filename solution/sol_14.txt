@@ -440,4 +440,184 @@ Hashtable은 컬렉션 프레임웍이 도입되면서 HashMap으로 대체되�
 재정의해서 equals()의 결과가 true인 두 객체의 해시코드hashCode()의 결과값이 항상 같도록
 해주어야 한다.
 
+Properties는 HashMap의 구버전인 Hashtable을 상속받아 구현한 것으로, Hashtable은 키와 값을 (Object, Object)
+의 형태로 저장하는데 비해 Properties는 (String, String)의 형태로 저장하는 보다 단순화된 컬렉션클래스
+이다. 주로 애플리케이션의 환경설정과 관련된 속성(property)을 저장하는데 사용되며 데이터를 파일로부터
+읽고 쓰는 편리한 기능을 제공한다.
 
+import java.util.*;
+class PropertiesEx{
+  public static void main(String[] args){
+    Properties prop = new Properties();
+    
+    //prop에 키와 값(key, value)을 저장한다.
+    prop.setProperty("timeout","30");
+    prop.setProperty("language","kr");
+    prop.setProperty("size","10");
+    prop.setProperty("capacity","10");
+  
+    // prop에 저장된 요소들을 Enumeration을 이용해서 출력한다.
+    Enumeration e = prop.propertyNames();
+
+    while(e.hasMoreElements()){
+      String element = (String)e.nextElement();
+      System.out.println(element + "=" + prop.getProperty(element));
+    }
+    System.out.println();
+    prop.setProperty("size","20");
+    System.out.println("size=" + prop.getProperty("size"));
+    System.out.println("capacity=" +prop.getProperty("capacity", "20"));
+    System.out.println("loadfactor="
+                                + prop.getProperty("loadfactor", "0.75"));
+    System.out.println(prop); //prop에 저장된 요소들을 출력한다.
+    prop.list(System.out); //prop에 저장된 요소들을 (System.out)에 출력한다.  
+    }
+}
+Properties는 컬렉션프레임웍 이전의 구버전이므로 Iterator가 아닌 Enumeration을 사용한다.
+그리고 list메서드를 이용하면 Properties에 저장된 모든 데이터를 화면 또는 파일에 편리하게
+출력할 수 있다.
+
+void list(PrintStream out)
+void list(PrintWriter out)
+
+import java.io.*;
+import java.util.*;
+
+class PropertiesEx{
+  public static void main(String[] args){
+  //commandline에서 inputfile을 지정해주지 않으면 프로그램을 종료한다.
+  if(args.length != 1){
+    System.out.println("USAGE:  java PropertiesEx INPUTFILENAME");
+    System.exit(0);
+  }
+  Properties prop = new Properties();
+  String inputFile = args[0];
+  try{
+    prop.load(new FileInputStream(inputFile));
+  }catch(IOException e){
+    System.out.println("지정된 파일을 찾을 수 없습니다.");
+    System.exit(0);
+  }
+  Stromg name = prop.getProperty("name");
+  String[] data = prop.getProperty("data").split(",");
+  int max = 0, min = 0;
+  int sum = 0;
+
+  for(int i=0;i < data.length; i++){
+    int intValue = Integer.parseInt(data[i]);
+
+    if(i==0) max = min = intValue;
+    if(max < intValue)
+      max = intValue;
+    else if(min > intValue)
+      min = intValue;
+    sum += intValue;
+  }
+  System.out.println("이름 :" + name);
+  System.out.println("최대값 :" + max);
+  System.out.println("최소값 :" + min);
+  System.out.println("합계 :" + sum);
+  System.out.println("평균 :" + (sum*100.0/data.length)/100);
+  }
+}
+외부파일로부터 데이터를 입력받아서 계산결과를 보여주는 예제이다. 외부 파일의 형식은
+라인단위로 키와 값이 '='로 연결된 형태이어야 하며 주석라인은 첫 번째 문자가 '#'이어야
+한다. 정해진 규칙대로만 파일을 작성하면 load()를 호출하는 것만으로 쉽게 데이터를 읽어 올
+수 있다. 다만 인코딩(encoding)문제로 한글이 깨질 수 있기 때문에 한글을 입력받으려면 
+아래와 같이 코드를 변경해야한다.
+String name = prop.getProperty("name");
+try{
+  name = new String(name.getBytes("8859_1"), "EUC-KR");
+}catch(Exception e){}
+파일로부터 읽어온 데이터의 인코딩을 라틴문자집합(8859_1)에서 한글완성형(EUC-KR 또는
+KSC5601)로 변환해주는 과정을 추가한 것인데, 우리가 사용하고 있는 OS의 기본 인코딩(encoding)
+이 유니코드가 아니라서 이런 변환이 필요하다.
+
+import java.io.*;
+import java.util.*;
+
+class PropertiesEx{
+  public static void main(String[] args){
+  Properties prop = new Properties();
+
+  prop.setProperty("timeout","30");
+  prop.setProperty("language","한글");
+  prop.setProperty("size","10");
+  prop.setProperty("capacity","10");
+
+  try{
+      prop.store(new FileOutputStream("output.txt")
+                                            , "Properties Example");
+      prop.storeToXML(new FileOutputStream("output.xml")
+                                            , "Properties Example");
+  }catch(IOException e){
+    e.printStackTrace();
+  }
+  }
+}
+Properties에 저장된 데이터를 store()와 storeToXML()를 이용해서 파일로 저장하는 방법
+을 보여준다. 여기서도 한글문제가 발생하는데 storeToXML()로 저장한 XML은 Editplus나
+Eclipse에서 한글편집이 가능하므로 데이터에 한글이포함된 경우 store()보다는 storeToXML()
+을 이용해서 XML로 저장하는 것이 좋다.
+
+import java.io.*;
+import java.util.*;
+
+class PropertiesEx{
+  public static void main(String[] args){
+    Properties sysProp = System.getProperties();
+    System.out.println("java.version :"
+                                    + sysProp.getProperty("java.version"));
+    System.out.println("user.language :"
+                                    + sysProp.getProperty("user.language"));
+    sysProp.list(System.out);
+  }
+}
+시스템 속성을 가져오는 방법을 보여주는 예제이다. System클래스의 getProperties()를 호출하면
+시스템과 관련된 속성이 저장된 Properties를 가져올 수 있다. 이 중에서 원하는 속성을 getProperty()
+를 통해 얻을 수 있다.
+
+Arrays가 배열과 관련된 메서드를 제공하는 것처럼, Collections는 컬렉션과 관련된 메서드를 제공한다.
+fill(), copy(), sort(), binarySearch() 등의 메서드는 두 클래스에 모두 포함되어 있으며 같은 기능을
+한다. 
+멀티 쓰레드(multi-thread) 프로그래밍에서는 하나의 객체를 여러 쓰레드가 동시에 접근할 수 있기 때문에
+데이터의 일관성(consistency)을 유지하기 위해서는 공유되는 객체에 동기화(synchronization)가 필요하다.
+Vector와 Hashtable과 같은 구버전(JDK 1.2 이전)의 클래스들은 자체적으로 동기화 처리가 되어 있는데, 멀티
+쓰레드 프로그래밍이 아닌 경우에는 불필요한 기능이 되어 성능을 떨어뜨리는 요인이 된다.
+그래서 새로 추가된 ArrayList와 HashMap과 같은 컬렉션은 동기화를 자체적으로 처리하지 않고 필요한 경우에만
+java.util.Collections클래스의 동기화 메서드를 이용해서 동기화처리가 가능하도록 변경하였다.
+Collections클래스에는 동기화 메서드를 제공하고 있다.
+
+List SyncList = Collections.synchronizedList(new ArrayList(...));
+
+컬렉션에 저장된 데이터를 보호하기 위해서 컬렉션을 변경할 수 없게, 즉 읽기전용으로 만들어야할 때가 있다.
+주로 멀티 쓰레드 프로그래밍에서 여러 쓰레드가 하나의 컬렉션을 공유하다보면 데이터가 손상될 수 있는데, 
+Collections클래스에서는 이를 방지하기 위한 메서드들을 제공한다.(unmodifiable)
+
+단 하나의 객체만을 저장하는 컬렉션을 만들고 싶을 경우가 있다. (singleton)
+매개변수로 저장할 요소를 지정하면, 해당 요소를 저장하는 컬렉션을 반환한다. 그리고 반환된 컬렉션은 변경
+할 수 없다.
+
+컬렉션에 모든 종류의 객체를 저장할 수 있다는 것은 장점이기도 하고 단점이기도 하다. 대부분의 경우
+한 종류의 객체를 저장하며, 컬렉션에 지정된 종류의 객체만 저장할 수 있도록 제한하고 싶을 때 다음과 같이 사용한다.
+
+List list = new ArrayList();
+List checkedList = checkedList(list, String.class); //String만 저장가능
+checkedList.add("abc"); //ok
+chedkList.add(new Integer(3)); //에러. ClassCastExcetption발생
+
+컬렉션에 저장할 요소의 타입을 제한하는 것은 지네릭스(generics)로 간단히 처리할 수 있는데도 이런
+메서드들을 제공하는 이유는 호환성 때문이다.
+
+컬렉션 클래스 정리 & 요약
+ArrayList : 배열기반, 데이터의 추가와 삭제에 불리, 순차적인 추가삭제는 제일 빠름. 임의의 요소에 대한 접근성
+(accessibility)이 뛰어남
+LinkedList : 연결기반. 데이터의 추가와 삭제에 유리. 임의의 요소에 대한 접근성이 좋지 않다. 
+HashMap : 배열과 연결이 결합된 형태. 추가, 삭제, 검색, 접근성이 모두 뛰어남. 검색에는 최고성능을 보인다.
+TreeMap : 연결기반. 정렬과 검색(특히 범위검색)에 적합. 검색성능은 HashMap보다 떨어짐.
+Stack : Vector를 상속받아 구현
+Queue : LinkedList가 Queue인터페이스를 구현
+Properties : Hashtable을 상속받아 구현
+HashSet : HashMap을 이용해서 구현
+TreeSet : TreeMap을 이용해서 구현
+LinkedHashMap/LinkedHashSet : HashMap과 HashSet에 저장순서유지기능을 추가
