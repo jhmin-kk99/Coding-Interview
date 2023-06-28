@@ -33,7 +33,6 @@
 |__String 객체가 불변인 이유는?__ |||
 |__형식화 클래스란?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_12.txt)__|_자바의 정석_|
 |__java.time패키지란? 사용하는 이유는? _//필요할 때 추가하기___ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_13.txt)__|_자바의 정석_|
-|__Synchronized란?__ |||
 |__리플랙션이란? 언제 쓰이는지?__ |||
 |__Optional API란?__ |||
 |__컬렉션프레임워크란?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_14.txt)__|_자바의 정석_|
