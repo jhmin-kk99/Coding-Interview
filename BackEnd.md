@@ -26,7 +26,6 @@
 |__인터페이스를 사용하는 이유와 그 장점은?__  |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_9.txt)__|_자바의 정석_|
 |__예외처리를 언제 하는지, 왜 하는지?__  |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_10.txt)__|_자바의 정석_|
 |__try-with-resources란?__ |||
-|__CheckedException과 UnCheckedException의 차이는?__ |||
 |__내부클래스의 장점은?__ |||
 |__java.lang패키지에서 자주 사용되는 클래스들은?__  |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_11.txt)__|_자바의 정석_|
 |__new String()과 리터럴("")의 차이는?__ |||
