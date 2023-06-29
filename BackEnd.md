@@ -14,7 +14,7 @@
 |__예외처리를 언제 하는지, 왜 하는지?__  |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_10.txt)__|_자바의 정석_|
 |__java.lang패키지에서 자주 사용되는 클래스들은?__  |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_11.txt)__|_자바의 정석_|
 |__형식화 클래스란?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_12.txt)__|_자바의 정석_|
-|__java.time패키지란? 사용하는 이유는? _//필요할 때 추가하기___ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_13.txt)__|_자바의 정석_|
+|__java.time패키지란? 사용하는 이유는? __ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_13.txt)__|_자바의 정석_|
 |__컬렉션프레임워크란?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_14.txt)__|_자바의 정석_|
 |__제네릭이란? 왜 쓰는지?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_15.txt)__|_자바의 정석_|
 |__열거형이란? 애너테이션이란?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_16.txt)__|_자바의 정석_|
