@@ -39,7 +39,8 @@
 |__제네릭이란? 왜 쓰는지?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_15.txt)__|_자바의 정석_|
 |__열거형이란? 애너테이션이란?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_16.txt)__|_자바의 정석_|
 |__프로세스란? 쓰레드란?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_17.txt)__|_자바의 정석_|
-|__람다식이란? 스트림이란?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_18.txt)__|_자바의 정석_|
+|__람다식이란?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_18.txt)__|_자바의 정석_|
+|__스트림이란?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_19.txt)__|_자바의 정석_|
 |__final / finally / finalize 의 차이는 무엇인지?__ |||
 |__직렬화(Serialize)란?__ |||
 |__SerialVersionUID를 선언해야 하는 이유는?__ |||
