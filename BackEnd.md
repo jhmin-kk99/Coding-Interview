@@ -21,4 +21,4 @@
 |__프로세스란? 쓰레드란?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_17.txt)__|_자바의 정석_|
 |__람다식이란?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_18.txt)__|_자바의 정석_|
 |__스트림이란?__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_19.txt)__|_자바의 정석_|
-
+|__입출력I/O란? //필요할 때 추가__ |__[solution](https://github.com/jhmin-kk99/Coding-Interview/blob/main/solution/sol_20.txt)__|_자바의 정석_|
