@@ -20,7 +20,7 @@ class Buyer{
 }
 
 Buyer클래스에 물건을 구입하는 기능의 메서드를 추가하려고 할 때,
-구입할 대상이 필요하므로 매개벼누로 구입할 제품을 넘겨받아야 한다.
+구입할 대상이 필요하므로 매개변수로 구입할 제품을 넘겨받아야 한다.
 
 Tv를 구입하려면 Buyer클래스 안에 
 
@@ -117,17 +117,3 @@ boolean remove(Object o) : Vector에 저장되어 있는 객체를 제거한다.
 boolean isEmpty() : Vector가 비어있는지 검사한다. 비어있으면 true, 비어있지 않으면 false를 반환한다.
 Object get(int index) : 지정된 위치(index)의 객체를 반환한다. 반환타입이 Object타입이므로 적절한 타입으로의 형변환이 필요하다.
 int size() : Vector에 저장된 객체의 개수를 반환한다.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
